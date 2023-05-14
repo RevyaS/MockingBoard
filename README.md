@@ -3,11 +3,11 @@ App for Mocking Apps and Websites from High Level to Low Level View
 
 ## Features
 ### 1. Navigate the page by mouse wheel
-![](https://github.com/MockingBoard/Documents/Navigate.gif)
+![](https://github.com/RevyaS/MockingBoard/blob/main/Documents/Navigate.gif)
 - [ ] Manipulate the page similar to AutoCAD
 
 ###  1. Divide pages by slice tool
-![](https://github.com/MockingBoard/Documents/Slice.gif)
+![](https://github.com/RevyaS/MockingBoard/blob/main/Documents/Slice.gif)
 
 - [ ] Part of Toolbar on top
 - [ ] Slice page horizontally or vertically
@@ -16,7 +16,7 @@ App for Mocking Apps and Websites from High Level to Low Level View
 - [ ] Editable measurements
 
 ### 2. Add components on page divisions
-![](https://github.com/MockingBoard/Documents/Components.gif)
+![](https://github.com/RevyaS/MockingBoard/blob/main/Documents/Components.gif)
 
 - [ ] Popup on the left side 
 - [ ] Add components on slices
