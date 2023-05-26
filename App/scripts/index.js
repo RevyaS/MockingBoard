@@ -22,8 +22,8 @@ function konvaSetup()
 {
     stage = new Konva.Stage({
         container: 'canvasContainer',
-        width: bodyContainer.width(),
-        height: bodyContainer.height()
+        width: 1920,
+        height: 1080
     })
 
     let layer = new Konva.Layer();
@@ -31,8 +31,8 @@ function konvaSetup()
 
     //Initial Page Size
     let page = new Konva.Rect({
-        x: 120,
-        y: 20,
+        x: 180,
+        y: 60,
         width: 800,
         height: 450,
         fill: '#6f6f6f',
