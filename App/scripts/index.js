@@ -22,25 +22,26 @@ function konvaSetup()
 {
     stage = new Konva.Stage({
         container: 'canvasContainer',
-        width: bodyContainer.width(),
-        height: bodyContainer.height()
+        width: 1920,
+        height: 1080
     })
 
-    let layer = new Konva.Layer();
-    // Add shapes and other Konva elements to the layer
+    //DEBUG Items
+    let debugSquare = new DebuggingSquare(25, 0);
 
-    //Initial Page Size
-    let page = new Konva.Rect({
-        x: 120,
-        y: 20,
-        width: 800,
-        height: 450,
-        fill: '#6f6f6f',
-    })
+    let mainLayer = new MainLayer();
 
-    layer.add(page);
+    stage.add(mainLayer.layer);
+    stage.add(debugSquare.layer);
 
-    stage.add(layer);
+    stage.on('mousemove', function () {
+        debugSquare.onMouseMove();
+    });
+
+    stage.on('wheel', function (evt) {
+        let deltaY = evt.evt.deltaY;
+        mainLayer.zoomPage(deltaY);
+    });
 }
 
 
