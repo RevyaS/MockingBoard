@@ -3,10 +3,11 @@ class DebuggingSquare
     constructor(x, y)
     {
         //Constants
-        this.width = 100;
+        this.width = 190;
         this.height = 200;
         this.stroke = '#550000';
         this.fontSize = 16;
+        this.fontFamily = 'Calibri';
 
         //Create Square
         this.borderSquare = new Konva.Rect({
@@ -22,7 +23,7 @@ class DebuggingSquare
         this.mouseX = new Konva.Text({
             x: x,
             y: yPos,
-            fontFamily: 'Calibri',
+            fontFamily: this.fontFamily,
             fontSize: this.fontSize,
             text: 'mouseX: 0',
             fill: 'black',
@@ -33,9 +34,20 @@ class DebuggingSquare
         this.mouseY = new Konva.Text({
             x: x,
             y: yPos,
-            fontFamily: 'Calibri',
+            fontFamily: this.fontFamily,
             fontSize: this.fontSize,
             text: 'mouseY: 0',
+            fill: 'black',
+        });
+
+        yPos += this.fontSize;
+        //APP State Text
+        this.appState = new Konva.Text({
+            x: x,
+            y: yPos,
+            fontFamily: this.fontFamily,
+            fontSize: this.fontSize,
+            text: 'appState: DEFAULT',
             fill: 'black',
         });
 
@@ -43,6 +55,7 @@ class DebuggingSquare
         layer.add(this.borderSquare);
         layer.add(this.mouseX);
         layer.add(this.mouseY);
+        layer.add(this.appState);
 
         this.layer = layer;
     };
@@ -53,5 +66,10 @@ class DebuggingSquare
         let pos = this.layer.getRelativePointerPosition();
         this.mouseX.setText('mouseX: ' + pos.x);
         this.mouseY.setText('mouseY: ' + pos.y);
+    }
+
+    onStateChanged(newState)
+    {
+        this.appState.setText('appState: ' + newState);
     }
 }

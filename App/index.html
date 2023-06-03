@@ -14,10 +14,10 @@
     <div class="flex-column d-flex h-100 w-100">
         <!-- Toolbar -->
         <div class="row w-100 ps-4 m-0 gap-2" id="toolbar">
-            <button class="toolbar-btn-image">
+            <button class="toolbar-btn-image" id="horizontalSliceTool">
                 <img class="h-75" src="content\assets\icons\toolbar-slice.png" />
             </button>
-            <button class="toolbar-btn-image">
+            <button class="toolbar-btn-image" id="verticalSliceTool">
                 <img class="h-75 rotate90" src="content\assets\icons\toolbar-slice.png" />
             </button>
         </div>
@@ -43,9 +43,12 @@
     <script src="lib\jquery-3.7.0.min.js"></script>
     <script src="lib\bootstrap-5.1.3-dist\js\bootstrap.min.js"></script>
     <script src="lib\konva-9.0.2.min.js"></script>
+    <!-- Data -->
+    <script src="scripts\states\AppState.js"></script>
+
     <!-- Components -->
     <script src="scripts\shapes\Page.js"></script>
-
+    <!-- Layers -->
     <script src="scripts\layers\DebugSquare.js"></script>
     <script src="scripts\layers\MainLayer.js"></script>
 

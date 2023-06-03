@@ -1,20 +1,46 @@
+//Data
+var appState;
+
 //Elements
 var itemList;
 var componentListToggle;
 var bodyContainer;
+var html;
+
+var horizontalSliceButton;
+var verticalSliceButton;
+
 //Canvas Variables
 var stage;
 
+//Events
+var mouseMovedEvent;
+var mouseWheelEvent;
+var appStateChanged;
 
 $(document).ready(() => 
 {
+    appState = APPSTATE.DEFAULT;
+
     //Get Elemeents
+    horizontalSliceButton = $('#horizontalSliceTool');
+    verticalSliceButton = $('#verticalSliceTool');
+
     itemList = $('#itemList');
     componentListToggle = $('#componentListToggle');
     bodyContainer = $('#bodyContainer');
+    html = $('html');
+    
+
+    mouseMovedEvent = 'mouseMoved';
+    mouseWheelEvent = 'mouseWheel';
+    appStateChanged = 'appStateChanged';
+
     //Initial Setup
     itemList.hide();
     konvaSetup();
+
+    eventSetup();
 });
 
 
@@ -28,22 +54,51 @@ function konvaSetup()
 
     //DEBUG Items
     let debugSquare = new DebuggingSquare(25, 0);
-
-    let mainLayer = new MainLayer();
-
-    stage.add(mainLayer.layer);
-    stage.add(debugSquare.layer);
-
-    stage.on('mousemove', function () {
+    stage.on(mouseMovedEvent, () => {
         debugSquare.onMouseMove();
     });
+    stage.on(appStateChanged, () => {
+        debugSquare.onStateChanged(appState);
+    });
 
-    stage.on('wheel', function (evt) {
+    let mainLayer = new MainLayer();
+    stage.on(mouseWheelEvent, (evt) => {
         let deltaY = evt.evt.deltaY;
         mainLayer.zoomPage(deltaY);
     });
+
+    stage.add(mainLayer.layer);
+    stage.add(debugSquare.layer);
 }
 
+function eventSetup()
+{
+    stage.on('mousemove', function () {
+        stage.fire(mouseMovedEvent);
+    });
+
+    stage.on('wheel', function (evt) {
+        stage.fire(mouseWheelEvent, evt);
+    });
+
+    horizontalSliceButton.on('click', function () {
+        appState = APPSTATE.HORIZONTALSLICE;
+        stage.fire(appStateChanged);
+    });
+
+    verticalSliceButton.on('click', function () {
+        appState = APPSTATE.VERTICALSLICE;
+        stage.fire(appStateChanged);
+    });
+
+    //Right click on app
+    html.on('contextmenu', function (ev)
+    {
+        appState = APPSTATE.DEFAULT;
+        stage.fire(appStateChanged);
+        ev.preventDefault();
+    })
+}
 
 //Event Functions
 function toggleComponentList()
