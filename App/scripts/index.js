@@ -53,18 +53,23 @@ function konvaSetup()
     })
 
     //DEBUG Items
-    let debugSquare = new DebuggingSquare(25, 0);
+    let mainLayer = new MainLayer();
+    let debugSquare = new DebuggingSquare(25, 0, mainLayer.page);
+
     stage.on(mouseMovedEvent, () => {
         debugSquare.onMouseMove();
-    });
-    stage.on(appStateChanged, () => {
-        debugSquare.onStateChanged(appState);
+        mainLayer.onMouseMove();
     });
 
-    let mainLayer = new MainLayer();
     stage.on(mouseWheelEvent, (evt) => {
         let deltaY = evt.evt.deltaY;
         mainLayer.zoomPage(deltaY);
+        debugSquare.onPageScale();
+    });
+
+    stage.on(appStateChanged, () => {
+        debugSquare.onStateChanged(appState);
+        mainLayer.onStateChanged(appState);
     });
 
     stage.add(mainLayer.layer);
