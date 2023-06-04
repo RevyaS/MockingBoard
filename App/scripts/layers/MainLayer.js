@@ -3,13 +3,34 @@ class MainLayer
     constructor()
     {
         var layer = new Konva.Layer();
+        this.state = APPSTATE.DEFAULT;
 
         //Initial Page Size
-        let page = new Page(180, 60);
-        layer.add(page.shape);
+        let page = new Page(240, 60);
+        layer.add(page.group);
     
         this.page = page;
         this.layer = layer;
+    }
+
+    onStateChanged(newState)
+    {
+        this.state = newState;
+        this.page.setState(newState);
+    }
+
+    onMouseMove()
+    {
+        let pos = this.layer.getRelativePointerPosition();
+        switch (this.state)
+        {
+            case APPSTATE.HORIZONTALSLICE:
+                this.page.showHorizontalSliceGuideLine(pos);
+                break;
+            case APPSTATE.VERTICALSLICE:
+                this.page.showVerticalSliceGuideLine(pos);
+                break;
+        }
     }
 
     zoomPage(deltaY) {
