@@ -1,2 +1,2 @@
 
-const ICONPATH = 'content\assets\icons';
+const ICON_PATH = "content\assets\icons";

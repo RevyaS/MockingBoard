@@ -1,54 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mocking Board</title>
 
     <!-- CSS -->
-    <link href="lib\bootstrap-5.1.3-dist\css\bootstrap.min.css" rel="stylesheet">
-    <link href="content\css\index.css" rel="stylesheet">
-</head>
-<body>
+    <link
+      href="lib\bootstrap-5.1.3-dist\css\bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link href="content\css\index.css" rel="stylesheet" />
+  </head>
+  <body>
     <div class="flex-column d-flex h-100 w-100">
-        <!-- Toolbar -->
-        <div class="row w-100 ps-4 m-0 gap-2" id="toolbar">
-            <button class="toolbar-btn-image" id="horizontalSliceTool">
-                <img class="h-75" src="content\assets\icons\toolbar-slice.png" />
-            </button>
-            <button class="toolbar-btn-image" id="verticalSliceTool">
-                <img class="h-75 rotate90" src="content\assets\icons\toolbar-slice.png" />
-            </button>
-        </div>
+      <!-- Toolbar -->
+      <div class="row w-100 ps-4 m-0 gap-2" id="toolbar">
+        <button class="toolbar-btn-image" id="horizontalSliceTool">
+          <img class="h-75" src="content\assets\icons\toolbar-slice.png" />
+        </button>
+        <button class="toolbar-btn-image" id="verticalSliceTool">
+          <img
+            class="h-75 rotate90"
+            src="content\assets\icons\toolbar-slice.png"
+          />
+        </button>
+      </div>
 
-        <div class="flex-grow-1" id="bodyContainer">
-            <!-- Canvas -->
-            <div id="canvasContainer"></div>
+      <style>
+        #itemList {
+          text-align: center;
+          width: 200px; /* Set the desired width  */
+        }
+      </style>
+
+      <div class="flex-grow-1" id="bodyContainer">
+        <!-- Canvas -->
+        <div id="canvasContainer"></div>
+
+        <!-- Component List (On Top Of Canvas) -->
+        <div class="h-100 row" id="componentList">
+          <div id="itemList">
             
-            <!-- Component List (On Top Of Canvas) -->
-            <div class="h-100 row" id="componentList">
-                <div id="itemList">
-
-                </div>
-                <button class="h-100" id="componentListToggle" onclick="toggleComponentList()">
-                    &gt;
-                </button>
-            </div>
-
+            <style>
+              .custom-button {
+                width: 185px;
+                color: #ffffff;
+                background-color: #000000;
+                display: flex;
+                align-items: center;
+                margin-bottom: 5px;
+              }
+              .custom-button img {
+                filter: brightness(0) invert(1); /* Invert image color to white */
+              }
+              .custom-button span {
+                flex-grow: 1;
+                text-align: center;
+              }
+            </style>
+            
+            <button
+              class="btn btn-primary custom-button"
+              style="width: 185px;"
+              onclick="handleButtonClick('Button 1')"
+            >
+              <img
+                src="content/assets/icons/toolbar-slice.png"
+                alt="Icon"
+                class="mr-2"
+              />
+              <span>Button 1</span>
+            </button>
+            
+            <button
+              class="btn btn-primary custom-button"
+              style="width: 185px;"
+              onclick="handleButtonClick('Button 1')"
+            >
+              <img
+                src="content/assets/icons/toolbar-slice.png"
+                alt="Icon"
+                class="mr-2"
+              />
+              <span>Button 2</span>
+            </button>
+            
+            <button
+              class="btn btn-primary custom-button"
+              style="width: 185px;"
+              onclick="handleButtonClick('Button 1')"
+            >
+              <img
+                src="content/assets/icons/toolbar-slice.png"
+                alt="Icon"
+                class="mr-2"
+              />
+              <span>Button 3</span>
+            </button>
+            
+            <button
+              class="btn btn-primary custom-button"
+              style="width: 185px;"
+              onclick="handleButtonClick('Button 1')"
+            >
+              <img
+                src="content/assets/icons/toolbar-slice.png"
+                alt="Icon"
+                class="mr-2"
+              />
+              <span>Button 4</span>
+            </button>
+            
+            <button
+              class="btn btn-primary custom-button"
+              style="width: 185px;"
+              onclick="handleButtonClick('Button 1')"
+            >
+              <img
+                src="content/assets/icons/toolbar-slice.png"
+                alt="Icon"
+                class="mr-2"
+              />
+              <span>Button 5</span>
+            </button>
+            <!-- Add more buttons here -->
+          </div>
+          <button
+            class="h-100"
+            id="componentListToggle"
+            onclick="toggleComponentList()"
+          >
+            &gt;
+          </button>
         </div>
+      </div>
     </div>
 
     <!-- JS -->
     <script src="lib\jquery-3.7.0.min.js"></script>
     <script src="lib\bootstrap-5.1.3-dist\js\bootstrap.min.js"></script>
     <script src="lib\konva-9.0.2.min.js"></script>
-    
+
     <!-- Data -->
     <script src="scripts\states\AppState.js"></script>
 
     <!-- Components -->
-    <script src="scripts\Constant.js"></script>
+    <!-- <script src="scripts\Constant.js" type="module"></script> -->
     <script src="scripts\shapes\HorizontalSliceGuide.js"></script>
     <script src="scripts\shapes\VerticalSliceGuide.js"></script>
     <script src="scripts\shapes\Page.js"></script>
@@ -57,5 +156,5 @@
     <script src="scripts\layers\MainLayer.js"></script>
 
     <script src="scripts\index.js"></script>
-</body>
+  </body>
 </html>

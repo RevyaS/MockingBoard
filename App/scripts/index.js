@@ -1,3 +1,4 @@
+
 //Data
 var appState;
 
@@ -17,6 +18,8 @@ var stage;
 var mouseMovedEvent;
 var mouseWheelEvent;
 var appStateChanged;
+
+const log = console.log;    //* short for console.log, for debugging purposes
 
 $(document).ready(() => 
 {
@@ -120,4 +123,8 @@ function toggleComponentList()
     }
 }
 
-
+//* Event Button Functions based on their button name
+function handleButtonClick(buttonName)
+{
+    log(buttonName + " clicked");
+}
