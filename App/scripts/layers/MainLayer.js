@@ -16,14 +16,20 @@ class MainLayer
     onStateChanged(newState)
     {
         this.state = newState;
+        this.page.setState(newState);
     }
 
     onMouseMove()
     {
         let pos = this.layer.getRelativePointerPosition();
-        if (this.state == APPSTATE.HORIZONTALSLICE)
+        switch (this.state)
         {
-            this.page.showHorizontalSliceRuler(pos);    
+            case APPSTATE.HORIZONTALSLICE:
+                this.page.showHorizontalSliceGuideLine(pos);
+                break;
+            case APPSTATE.VERTICALSLICE:
+                this.page.showVerticalSliceGuideLine(pos);
+                break;
         }
     }
 

@@ -1,6 +1,6 @@
-class HorizontalSliceGuide
+class VerticalSliceGuide
 {
-    constructor(x, y, width)
+    constructor(x, y, height)
     {
         this.x = x;
         this.y = y;
@@ -11,7 +11,7 @@ class HorizontalSliceGuide
         })
 
         let outline = new Konva.Line({
-            points: [0, y, width, y],
+            points: [x, 0, x, height],
             stroke: 'white',
             strokeWidth: 7,
         })
@@ -19,7 +19,7 @@ class HorizontalSliceGuide
         outline.setOpacity(0);
 
         let line = new Konva.Line({
-            points: [0, y, width, y],
+            points: [x, 0, x, height],
             stroke: 'blue',
             strokeWidth: 3,
             dash: [20, 10]
@@ -38,11 +38,11 @@ class HorizontalSliceGuide
         return pos;
     }
 
-    setYPosition(y)
+    setXPosition(x)
     {
-        this.y = Math.floor(y);
+        this.x = Math.floor(x);
         this.group.setAttrs({
-            y: this.y
+            x: this.x
         })
     }
 

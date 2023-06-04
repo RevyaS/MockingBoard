@@ -8,7 +8,6 @@ class Page
         this.width = 890;
         this.height = 450;
         this.fill = '#6f6f6f';
-        this.state = APPSTATE.DEFAULT;
         this.x = x;
         this.y = y;
 
@@ -27,8 +26,14 @@ class Page
         group.add(pageShape);
 
         let horizontalSliceGuideLine = new HorizontalSliceGuide(0, 0, this.width);
-  
+        group.add(horizontalSliceGuideLine.group);
+        horizontalSliceGuideLine.setOpacity(0);
         this.horizontalSliceGuideLine = horizontalSliceGuideLine;
+
+        let verticalSliceGuideLine = new VerticalSliceGuide(0, 0, this.height);
+        group.add(verticalSliceGuideLine.group);
+        verticalSliceGuideLine.setOpacity(0);
+        this.verticalSliceGuideLine = verticalSliceGuideLine;
 
         this.group = group;
     }
@@ -36,6 +41,16 @@ class Page
     getScale()
     {
         return this.group.scale();
+    }
+
+    getInverseScale()
+    {
+        let scale = this.getScale();
+        let inverseScale = {
+            x: Math.abs(scale.x - 2),
+            y: Math.abs(scale.y - 2)
+        }
+        return inverseScale;
     }
 
     scaleBy(scaleRatio)
@@ -69,5 +84,64 @@ class Page
             y: this.group.y()
         };
         return pos;
+    }
+
+    setState(newState)
+    {
+        switch (newState)
+        {
+            case APPSTATE.DEFAULT:
+                this.horizontalSliceGuideLine.setOpacity(0);
+                this.verticalSliceGuideLine.setOpacity(0);
+                break;
+        }
+    }
+
+    showHorizontalSliceGuideLine(mousePos)
+    {
+        //Compute for mouse in Y Bounds
+        let topYBounds = this.y > mousePos.y;
+        let bottomYBounds = this.y + this.height < mousePos.y;
+        let inYBounds = !(topYBounds || bottomYBounds);
+
+        //Compute Relative Position of mouse to Page
+        let relativeYPosition = mousePos.y - this.y;
+        //Get Ratio
+        let relativeYRatio = relativeYPosition / this.height;
+        let relativeYPositionUnscaled = this.origHeight * relativeYRatio;
+
+        //Move guideline
+        if (inYBounds)
+        {
+            this.horizontalSliceGuideLine.setOpacity(1);
+            this.horizontalSliceGuideLine.setYPosition(relativeYPositionUnscaled)       
+        } else 
+        {
+            this.horizontalSliceGuideLine.setOpacity(0);
+        }
+    }
+
+    showVerticalSliceGuideLine(mousePos)
+    {
+        //Compute for mouse in x Bounds
+        let topXBounds = this.x > mousePos.x;
+        let bottomXBounds = this.x + this.width < mousePos.x;
+        let inXBounds = !(topXBounds || bottomXBounds);
+
+        //Compute Relative Position of mouse to Page
+        let relativeXPosition = mousePos.x - this.x;
+        //Get Ratio
+        let relativeXRatio = relativeXPosition / this.width;
+        let relativeXPositionUnscaled = this.origWidth * relativeXRatio;
+
+        //Move guideline
+        if (inXBounds)
+        {
+            this.verticalSliceGuideLine.setOpacity(1);
+            this.verticalSliceGuideLine.setXPosition(relativeXPositionUnscaled)       
+        } else 
+        {
+            this.verticalSliceGuideLine.setOpacity(0);
+        }
     }
 }   
