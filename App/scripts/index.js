@@ -10,6 +10,7 @@ var html;
 
 var horizontalSliceButton;
 var verticalSliceButton;
+var circleButton;
 
 //Canvas Variables
 var stage;
@@ -28,6 +29,7 @@ $(document).ready(() =>
     //Get Elemeents
     horizontalSliceButton = $('#horizontalSliceTool');
     verticalSliceButton = $('#verticalSliceTool');
+    circleButton = $('#circleGenerate');
 
     itemList = $('#itemList');
     componentListToggle = $('#componentListToggle');
@@ -90,6 +92,7 @@ function eventSetup()
     });
 
     horizontalSliceButton.on('click', function () {
+        
         appState = APPSTATE.HORIZONTALSLICE;
         stage.fire(appStateChanged);
     });
@@ -97,6 +100,10 @@ function eventSetup()
     verticalSliceButton.on('click', function () {
         appState = APPSTATE.VERTICALSLICE;
         stage.fire(appStateChanged);
+    });
+    
+    circleButton.on('click', function() {
+        handleComponentButtonClick("0");
     });
 
     //Right click on app
@@ -124,7 +131,12 @@ function toggleComponentList()
 }
 
 //* Event Button Functions based on their button name
-function handleButtonClick(buttonName)
+function handleComponentButtonClick(buttonName)
 {
-    log(buttonName + " clicked");
+    if(buttonName == "0")
+    {
+        log('Circle button clicked');
+        appState = APPSTATE.DEFAULT;
+        stage.fire(appStateChanged);
+    }
 }
