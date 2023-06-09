@@ -54,7 +54,7 @@ function konvaSetup()
 
     //DEBUG Items
     let mainLayer = new MainLayer();
-    let debugSquare = new DebuggingSquare(25, 0, mainLayer.page);
+    let debugSquare = new DebuggingSquare(25, 0, mainLayer);
     // debugSquare.setOpacity(0);
     stage.on(mouseMovedEvent, () => {
         debugSquare.onMouseMove();

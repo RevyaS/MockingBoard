@@ -48,35 +48,6 @@ class Page
         this.group = group;
     }
 
-    getScale()
-    {
-        return this.group.scale();
-    }
-
-    getInverseScale()
-    {
-        let scale = this.getScale();
-        let inverseScale = {
-            x: Math.abs(scale.x - 2),
-            y: Math.abs(scale.y - 2)
-        }
-        return inverseScale;
-    }
-
-    scaleBy(scaleRatio)
-    {
-        let currScale = this.getScale();
-        let scaleX = currScale.x * scaleRatio;
-        let scaleY = currScale.y * scaleRatio;
-        let newScale = {
-            x: scaleX,
-            y: scaleY
-        };
-        this.width = Math.floor(this.origWidth * scaleX);
-        this.height = Math.floor(this.origHeight * scaleX);
-        this.group.scale(newScale);
-    }
-
     setPosition(x, y)
     {
         this.x = Math.floor(x);

@@ -1,6 +1,6 @@
 class DebuggingSquare
 {
-    constructor(x, y, selectedPage)
+    constructor(x, y, mainLayer)
     {
         //Constants
         this.width = 190;
@@ -11,7 +11,7 @@ class DebuggingSquare
         this.fontColor = 'white';
 
         //Dependencies
-        this.selectedPage = selectedPage;
+        this.mainLayer = mainLayer;
 
         let layer = new Konva.Layer();
 
@@ -57,8 +57,8 @@ class DebuggingSquare
             y: yPos,
             fontFamily: this.fontFamily,
             fontSize: this.fontSize,
-            text: 'selectedPage00: (' + selectedPage.x + ',' 
-                + selectedPage.y + ')',
+            text: 'layerPage00: (' + mainLayer.x + ',' 
+                + mainLayer.y + ')',
             fill: this.fontColor
         });
         layer.add(this.pageBounds00);
@@ -69,9 +69,9 @@ class DebuggingSquare
             y: yPos,
             fontFamily: this.fontFamily,
             fontSize: this.fontSize,
-            text: 'selectedPage01: ('
-                + selectedPage.x + ','
-                + (selectedPage.y + selectedPage.height) + ')',
+            text: 'layerPage01: ('
+                + mainLayer.x + ','
+                + (mainLayer.y + mainLayer.height) + ')',
             fill: this.fontColor
         });
         layer.add(this.pageBounds01);
@@ -82,9 +82,9 @@ class DebuggingSquare
             y: yPos,
             fontFamily: this.fontFamily,
             fontSize: this.fontSize,
-            text: 'selectedPage10: ('
-                + (selectedPage.x + selectedPage.width) + ','
-                + selectedPage.y + ')',
+            text: 'layerPage10: ('
+                + (mainLayer.x + mainLayer.width) + ','
+                + mainLayer.y + ')',
             fill: this.fontColor
         });
         layer.add(this.pageBounds10);
@@ -95,9 +95,9 @@ class DebuggingSquare
             y: yPos,
             fontFamily: this.fontFamily,
             fontSize: this.fontSize,
-            text: 'selectedPage11: ('
-                + (selectedPage.x + selectedPage.width) + ','
-                + (selectedPage.y + selectedPage.height) + ')',
+            text: 'layerPage11: ('
+                + (mainLayer.x + mainLayer.width) + ','
+                + (mainLayer.y + mainLayer.height) + ')',
             fill: this.fontColor
         });
         layer.add(this.pageBounds11);
@@ -109,11 +109,22 @@ class DebuggingSquare
             y: yPos,
             fontFamily: this.fontFamily,
             fontSize: this.fontSize,
-            text: 'selectedPageScale: '
-                + selectedPage.getScale().x,
+            text: 'layerPageScale: '
+                + mainLayer.getScale().x,
             fill: this.fontColor
         });
         layer.add(this.pageScale);
+
+        yPos += this.fontSize;
+        this.pageSize = new Konva.Text({
+            x: x,
+            y: yPos,
+            fontFamily: this.fontFamily,
+            fontSize: this.fontSize,
+            text: 'currentLayer: ' + 0,
+            fill: this.fontColor
+        });
+        layer.add(this.pageSize);
 
         //Selected Page Size
         yPos += this.fontSize;
@@ -122,9 +133,9 @@ class DebuggingSquare
             y: yPos,
             fontFamily: this.fontFamily,
             fontSize: this.fontSize,
-            text: 'selectedPageSize: ('
-            + selectedPage.width + ','
-            + selectedPage.height + ')',
+            text: 'layerPageSize: ('
+            + mainLayer.width + ','
+            + mainLayer.height + ')',
             fill: this.fontColor
         });
         layer.add(this.pageSize);
@@ -143,23 +154,23 @@ class DebuggingSquare
 
     onPageScale()
     {
-        this.pageScale.setText('selectedPageScale: '
-            + this.selectedPage.getScale().x.toFixed(2));
-        this.pageSize.setText('selectedPageSize: ('
-        + this.selectedPage.width + ','
-        + this.selectedPage.height + ')');
-        this.pageBounds00.setText('selectedPage00: ('
-            + this.selectedPage.x + ','
-            + this.selectedPage.y + ')');
-        this.pageBounds01.setText('selectedPage01: ('
-            + this.selectedPage.x + ','
-            + (this.selectedPage.y + this.selectedPage.height) + ')');
-        this.pageBounds10.setText('selectedPage10: ('
-                + (this.selectedPage.x + this.selectedPage.width) + ','
-                + this.selectedPage.y + ')');
-        this.pageBounds11.setText('selectedPage11: ('
-                + (this.selectedPage.x + this.selectedPage.width) + ','
-                + (this.selectedPage.y + this.selectedPage.height) + ')');
+        this.pageScale.setText('layerPageScale: '
+            + this.mainLayer.getScale().x.toFixed(2));
+        this.pageSize.setText('layerPageSize: ('
+        + this.mainLayer.width + ','
+        + this.mainLayer.height + ')');
+        this.pageBounds00.setText('layerPage00: ('
+            + this.mainLayer.x + ','
+            + this.mainLayer.y + ')');
+        this.pageBounds01.setText('layerPage01: ('
+            + this.mainLayer.x + ','
+            + (this.mainLayer.y + this.mainLayer.height) + ')');
+        this.pageBounds10.setText('layerPage10: ('
+                + (this.mainLayer.x + this.mainLayer.width) + ','
+                + this.mainLayer.y + ')');
+        this.pageBounds11.setText('layerPage11: ('
+                + (this.mainLayer.x + this.mainLayer.width) + ','
+                + (this.mainLayer.y + this.mainLayer.height) + ')');
     }
 
     onStateChanged(newState)
