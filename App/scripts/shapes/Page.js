@@ -35,6 +35,12 @@ class Page
         verticalSliceGuideLine.setOpacity(0);
         this.verticalSliceGuideLine = verticalSliceGuideLine;
 
+        let horizontalRuler = new HorizontalRuler(0, 0, 100, this.width);
+        group.add(horizontalRuler.group);
+        this.horizontalRuler = horizontalRuler;
+        horizontalRuler.setWidth(200);
+
+
         this.group = group;
     }
 
@@ -93,6 +99,7 @@ class Page
             case APPSTATE.DEFAULT:
                 this.horizontalSliceGuideLine.setOpacity(0);
                 this.verticalSliceGuideLine.setOpacity(0);
+                this.horizontalRuler.setOpacity(0);
                 break;
         }
     }
@@ -104,17 +111,13 @@ class Page
         let bottomYBounds = this.y + this.height < mousePos.y;
         let inYBounds = !(topYBounds || bottomYBounds);
 
-        //Compute Relative Position of mouse to Page
-        let relativeYPosition = mousePos.y - this.y;
-        //Get Ratio
-        let relativeYRatio = relativeYPosition / this.height;
-        let relativeYPositionUnscaled = this.origHeight * relativeYRatio;
+        let relativePositionUnscaled = this.getRelativePositionUnscaled(mousePos);
 
         //Move guideline
         if (inYBounds)
         {
             this.horizontalSliceGuideLine.setOpacity(1);
-            this.horizontalSliceGuideLine.setYPosition(relativeYPositionUnscaled)       
+            this.horizontalSliceGuideLine.setYPosition(relativePositionUnscaled.y)       
         } else 
         {
             this.horizontalSliceGuideLine.setOpacity(0);
@@ -123,25 +126,75 @@ class Page
 
     showVerticalSliceGuideLine(mousePos)
     {
-        //Compute for mouse in x Bounds
+        let relativePositionUnscaled = this.getRelativePositionUnscaled(mousePos);
+        let mouseBoundsData = this.getMouseBoundsData(mousePos);
+
+        //Move guideline
+        if (mouseBoundsData.inBounds.x)
+        {
+            this.verticalSliceGuideLine.setOpacity(1);
+            this.verticalSliceGuideLine.setXPosition(relativePositionUnscaled.x)
+        
+            //Show ruler
+            if (mouseBoundsData.inBounds.y)
+            {
+                this.horizontalRuler.setOpacity(1);
+                this.horizontalRuler.setPosition(relativePositionUnscaled);                
+            } else 
+            {
+                this.horizontalRuler.setOpacity(0);
+            }
+        } else 
+        {
+            this.verticalSliceGuideLine.setOpacity(0);
+            this.horizontalRuler.setOpacity(0);
+        }
+    }
+
+    getRelativePositionUnscaled(mousePos)
+    {
+        //Compute Relative Position of mouse to Page
+        let relativePosition = {
+            x: mousePos.x - this.x,
+            y: mousePos.y - this.y,
+        };
+        //Get Ratio
+        let relativeRatio = {
+            x: relativePosition.x / this.width,
+            y: relativePosition.y / this.height
+        }
+        let relativePositionUnscaled = {
+            x: this.origWidth * relativeRatio.x,
+            y: this.origHeight * relativeRatio.y,
+        }
+
+        return relativePositionUnscaled;
+    }
+
+    getMouseBoundsData(mousePos)
+    {
+        let topYBounds = this.y > mousePos.y;
+        let bottomYBounds = this.y + this.height < mousePos.y;
+        let inYBounds = !(topYBounds || bottomYBounds);
+
         let topXBounds = this.x > mousePos.x;
         let bottomXBounds = this.x + this.width < mousePos.x;
         let inXBounds = !(topXBounds || bottomXBounds);
 
-        //Compute Relative Position of mouse to Page
-        let relativeXPosition = mousePos.x - this.x;
-        //Get Ratio
-        let relativeXRatio = relativeXPosition / this.width;
-        let relativeXPositionUnscaled = this.origWidth * relativeXRatio;
-
-        //Move guideline
-        if (inXBounds)
-        {
-            this.verticalSliceGuideLine.setOpacity(1);
-            this.verticalSliceGuideLine.setXPosition(relativeXPositionUnscaled)       
-        } else 
-        {
-            this.verticalSliceGuideLine.setOpacity(0);
-        }
+        let mouseBoundsData = {
+            topBounds: {
+                x: topXBounds,
+                y: topYBounds
+            },
+            bottomBounds: {
+                x: bottomXBounds,
+                y: bottomYBounds
+            },
+            inBounds: {
+                x: inXBounds,
+                y: inYBounds
+            }
+        };
+        return mouseBoundsData;
     }
 }   
