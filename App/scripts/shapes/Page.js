@@ -30,16 +30,20 @@ class Page
         horizontalSliceGuideLine.setOpacity(0);
         this.horizontalSliceGuideLine = horizontalSliceGuideLine;
 
+        let verticalRuler = new VerticalRuler(0, 0, 100, this.height, true);
+        group.add(verticalRuler.group);
+        verticalRuler.setOpacity(0);
+        this.verticalRuler = verticalRuler;
+
         let verticalSliceGuideLine = new VerticalSliceGuide(0, 0, this.height);
         group.add(verticalSliceGuideLine.group);
         verticalSliceGuideLine.setOpacity(0);
         this.verticalSliceGuideLine = verticalSliceGuideLine;
 
-        let horizontalRuler = new HorizontalRuler(0, 0, 100, this.width);
+        let horizontalRuler = new HorizontalRuler(0, 0, 100, this.width, true);
         group.add(horizontalRuler.group);
+        horizontalRuler.setOpacity(0);
         this.horizontalRuler = horizontalRuler;
-        horizontalRuler.setWidth(200);
-
 
         this.group = group;
     }
@@ -100,27 +104,38 @@ class Page
                 this.horizontalSliceGuideLine.setOpacity(0);
                 this.verticalSliceGuideLine.setOpacity(0);
                 this.horizontalRuler.setOpacity(0);
+                this.verticalRuler.setOpacity(0);
                 break;
         }
     }
 
     showHorizontalSliceGuideLine(mousePos)
     {
-        //Compute for mouse in Y Bounds
-        let topYBounds = this.y > mousePos.y;
-        let bottomYBounds = this.y + this.height < mousePos.y;
-        let inYBounds = !(topYBounds || bottomYBounds);
-
         let relativePositionUnscaled = this.getRelativePositionUnscaled(mousePos);
+        let mouseBoundsData = this.getMouseBoundsData(mousePos);
+
+        //Set Ruler position
+        this.verticalRuler.setLeftOffset(!mouseBoundsData.halfBounds.left);
 
         //Move guideline
-        if (inYBounds)
+        if (mouseBoundsData.inBounds.y)
         {
             this.horizontalSliceGuideLine.setOpacity(1);
             this.horizontalSliceGuideLine.setYPosition(relativePositionUnscaled.y)       
+        
+            //Show ruler
+            if (mouseBoundsData.inBounds.x)
+            {
+                this.verticalRuler.setOpacity(1);
+                this.verticalRuler.setPosition(relativePositionUnscaled);                
+            } else 
+            {
+                this.verticalRuler.setOpacity(0);
+            }
         } else 
         {
             this.horizontalSliceGuideLine.setOpacity(0);
+            this.verticalRuler.setOpacity(0);
         }
     }
 
@@ -128,6 +143,9 @@ class Page
     {
         let relativePositionUnscaled = this.getRelativePositionUnscaled(mousePos);
         let mouseBoundsData = this.getMouseBoundsData(mousePos);
+
+        //Set Ruler position
+        this.horizontalRuler.setBottomOffset(!mouseBoundsData.halfBounds.top);
 
         //Move guideline
         if (mouseBoundsData.inBounds.x)
@@ -177,6 +195,9 @@ class Page
         let bottomYBounds = this.y + this.height < mousePos.y;
         let inYBounds = !(topYBounds || bottomYBounds);
 
+        let onTopHalf = this.y + (this.height/2) > mousePos.y;
+        let onLeftHalf =  this.x + (this.width/2) > mousePos.x
+
         let topXBounds = this.x > mousePos.x;
         let bottomXBounds = this.x + this.width < mousePos.x;
         let inXBounds = !(topXBounds || bottomXBounds);
@@ -193,6 +214,10 @@ class Page
             inBounds: {
                 x: inXBounds,
                 y: inYBounds
+            },
+            halfBounds: {
+                top: onTopHalf,
+                left: onLeftHalf
             }
         };
         return mouseBoundsData;

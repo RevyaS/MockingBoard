@@ -1,6 +1,6 @@
 class HorizontalRuler
 {
-    constructor(x, y, width, maxWidth)
+    constructor(x, y, width, maxWidth, isBottomOffset)
     {
         this.x = x;
         this.y = y;
@@ -10,22 +10,19 @@ class HorizontalRuler
         this.width = width;
         this.maxWidth = maxWidth;
         this.fontSize = 30;
+        this.isBottomOffset = isBottomOffset;
 
         let group = new Konva.Group({
             x: x,
-            y:y
+            y: y
         })
-
-        // let outline = new Konva.Line({
-        //     points: [0, y, width, y],
-        //     stroke: 'white',
-        //     strokeWidth: 7,
-        // })
-        // group.add(outline);
-        // outline.setOpacity(0);
         
+        // Determines if ruler is drawn on the right or left side
+        let offsetMultiplier = this.isBottomOffset ? -1 : 1;
+        // Offset based on isLeftOffset
+        let offsetValue = this.offset * offsetMultiplier;
         let leftVerticalLine = new Konva.Line({
-            points: [x, y, x, this.offset],
+            points: [x, y, x, offsetValue],
             stroke: 'blue',
             strokeWidth: this.strokeWidth,
         });
@@ -33,7 +30,7 @@ class HorizontalRuler
         this.leftVerticalLine = leftVerticalLine;
 
         let rightVerticalLine = new Konva.Line({
-            points: [x + width, y, x + width, this.offset],
+            points: [x + width, y, x + width, offsetValue],
             stroke: 'blue',
             strokeWidth: this.strokeWidth,
         });
@@ -41,20 +38,22 @@ class HorizontalRuler
         this.rightVerticalLine = rightVerticalLine;
 
         let horizontalLine = new Konva.Line({
-            points: [0, y + this.offset, width, y + this.offset],
+            points: [0, y + offsetValue, width, y + offsetValue],
             stroke: 'blue',
             strokeWidth: this.strokeWidth,
         });
         group.add(horizontalLine);
         this.horizontalLine = horizontalLine;
 
+        this.textHeight = this.offset + (this.fontSize/2);
+        let textY = isBottomOffset ? y - (this.textHeight + this.fontSize/2) : y;
         let textValue = new Konva.Text({
             x: x ,
-            y: y,
+            y: textY,
             fontFamily: this.fontFamily,
             fontSize: this.fontSize,
             width: width,
-            height: this.offset + (this.fontSize / 2),
+            height: this.textHeight,
             align: 'center',
             verticalAlign: 'bottom',
             text: '27v',
@@ -75,37 +74,50 @@ class HorizontalRuler
         return pos;
     }
 
-    setPosition(newPos)
+    setPosition(relativeNewPos)
     {
         //Set Y
-        this.y = Math.floor(newPos.y);
+        this.y = Math.floor(relativeNewPos.y);
         this.group.setAttrs({
             y: this.y
         })
         //Compute Width
-        let width = Math.abs(newPos.x);
-        // console.log('width test, ', {width: width, inverse: Math.abs(this.maxWidth - width)});
+        let width = Math.abs(relativeNewPos.x);
         this.setWidth(width);
     }
 
     setWidth(newWidth)
     {
-        console.log('mouse y', this.y, this.y + this.offset);
+        // Determines if ruler is drawn on the right or left side
+        let offsetMultiplier = this.isBottomOffset ? -1 : 1;
+        // Offset based on isLeftOffset
+        let offsetValue = this.offset * offsetMultiplier;
         this.width = newWidth;
         this.horizontalLine.setAttrs({
-            points: [0, this.offset, this.width, this.offset]
+            points: [0, offsetValue, this.width, offsetValue]
+        });
+
+        this.leftVerticalLine.setAttrs({
+            points: [this.x, 0, this.x, offsetValue],
         });
 
         this.rightVerticalLine.setAttrs({
-            points: [this.x + this.width, 0, this.x + this.width, this.offset]
+            points: [this.x + this.width, 0, this.x + this.width, offsetValue]
         });
 
         let textWidth = this.width <= this.fontSize * 2 ? this.fontSize * 2 : this.width; 
         let textXOffset = this.width <= this.fontSize ? - (this.fontSize - this.width) : 0;
+        let textY = this.isBottomOffset ? -(this.textHeight + this.fontSize/2) : 0;
         this.textValue.setAttrs({
             width: textWidth,
-            x: textXOffset
+            x: textXOffset,
+            y: textY
         })
+    }
+
+    setBottomOffset(isBottomOffset)
+    {
+        this.isBottomOffset = isBottomOffset;
     }
 
     setOpacity(newOpacity)

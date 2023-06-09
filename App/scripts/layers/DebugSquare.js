@@ -166,4 +166,9 @@ class DebuggingSquare
     {
         this.appState.setText('appState: ' + newState);
     }
+
+    setOpacity(opacity)
+    {
+        this.layer.setOpacity(opacity);
+    }
 }
