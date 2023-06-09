@@ -45,8 +45,8 @@ class VerticalRuler
         group.add(verticalLine);
         this.verticalLine = verticalLine;
 
-        this.textWidth = this.offset + (this.fontSize);
-        let textX = isLeftOffset ? x - this.textWidth : x;
+        this.textWidth = this.offset + (this.fontSize) + 20;
+        let textX = isLeftOffset ? x - this.textWidth + 20: x;
         let textValue = new Konva.Text({
             x: textX,
             y: y,
@@ -107,12 +107,16 @@ class VerticalRuler
 
         let textWidth = this.height <= this.fontSize * 2 ? this.fontSize * 2 : this.height; 
         let textYOffset = this.height <= this.fontSize ? - (this.fontSize - this.height) : 0;
-        // let textWidth = this.offset + (this.fontSize);
-        let textX = this.isLeftOffset ? -this.textWidth : 0;
+        let textX = this.isLeftOffset ? -this.textWidth + 20 : 0;
+        
+        //Compute values
+        let heightRatio = (this.height / this.maxHeight) * 100;
+        let ratioValue = Math.floor(heightRatio) + 'v';
         this.textValue.setAttrs({
             height: textWidth,
             y: textYOffset,
-            x: textX
+            x: textX,
+            text: ratioValue
         })
     }
 

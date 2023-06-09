@@ -108,10 +108,15 @@ class HorizontalRuler
         let textWidth = this.width <= this.fontSize * 2 ? this.fontSize * 2 : this.width; 
         let textXOffset = this.width <= this.fontSize ? - (this.fontSize - this.width) : 0;
         let textY = this.isBottomOffset ? -(this.textHeight + this.fontSize/2) : 0;
+        
+        //Compute values
+        let widthRatio = (this.width / this.maxWidth) * 100;
+        let ratioValue = Math.floor(widthRatio) + 'h';
         this.textValue.setAttrs({
             width: textWidth,
             x: textXOffset,
-            y: textY
+            y: textY,
+            text: ratioValue
         })
     }
 

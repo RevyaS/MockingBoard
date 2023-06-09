@@ -3,7 +3,7 @@ class MainLayer
     constructor()
     {
         var layer = new Konva.Layer();
-        this.state = APPSTATE.VERTICALSLICE;
+        this.state = APPSTATE.DEFAULT;
 
         //Initial Page Size
         let page = new Page(240, 60);
