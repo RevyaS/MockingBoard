@@ -55,6 +55,15 @@ function konvaSetup()
     //DEBUG Items
     let mainLayer = new MainLayer();
     let debugSquare = new DebuggingSquare(25, 0, mainLayer);
+
+    mainLayer.layer.on(PAGEEVENTS.MOUSEENTERED, (page) => {
+        debugSquare.setCurrentPage(page);
+    })
+
+    mainLayer.layer.on(PAGEEVENTS.MOUSEEXITED, () => {
+        debugSquare.removeCurrentPage();
+    })
+
     // debugSquare.setOpacity(0);
     stage.on(mouseMovedEvent, () => {
         debugSquare.onMouseMove();
@@ -97,12 +106,11 @@ function eventSetup()
     });
 
     //Right click on app
-    html.on('contextmenu', function (ev)
-    {
+    html.on('contextmenu', function (ev) {
         appState = APPSTATE.DEFAULT;
         stage.fire(appStateChanged);
         ev.preventDefault();
-    })
+    });
 }
 
 //Event Functions

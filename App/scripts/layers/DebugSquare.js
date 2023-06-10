@@ -4,15 +4,19 @@ class DebuggingSquare
     {
         //Constants
         this.width = 190;
-        this.height = 200;
+        this.height = 400;
         this.stroke = '#550000';
         this.fontSize = 16;
         this.fontFamily = 'Calibri';
         this.fontColor = 'white';
+        
+        //Data
+        this.currentPageData = [];
+        this.currentPage = null;
 
         //Dependencies
         this.mainLayer = mainLayer;
-
+        
         let layer = new Konva.Layer();
 
         //Create Square
@@ -52,7 +56,7 @@ class DebuggingSquare
 
         //Page Bounds
         yPos += this.fontSize;
-        this.pageBounds00 = new Konva.Text({
+        this.layerBounds00 = new Konva.Text({
             x: x,
             y: yPos,
             fontFamily: this.fontFamily,
@@ -61,10 +65,10 @@ class DebuggingSquare
                 + mainLayer.y + ')',
             fill: this.fontColor
         });
-        layer.add(this.pageBounds00);
+        layer.add(this.layerBounds00);
 
         yPos += this.fontSize;
-        this.pageBounds01 = new Konva.Text({
+        this.layerBounds01 = new Konva.Text({
             x: x,
             y: yPos,
             fontFamily: this.fontFamily,
@@ -74,10 +78,10 @@ class DebuggingSquare
                 + (mainLayer.y + mainLayer.height) + ')',
             fill: this.fontColor
         });
-        layer.add(this.pageBounds01);
+        layer.add(this.layerBounds01);
 
         yPos += this.fontSize;
-        this.pageBounds10 = new Konva.Text({
+        this.layerBounds10 = new Konva.Text({
             x: x,
             y: yPos,
             fontFamily: this.fontFamily,
@@ -87,10 +91,10 @@ class DebuggingSquare
                 + mainLayer.y + ')',
             fill: this.fontColor
         });
-        layer.add(this.pageBounds10);
+        layer.add(this.layerBounds10);
 
         yPos += this.fontSize;
-        this.pageBounds11 = new Konva.Text({
+        this.layerBounds11 = new Konva.Text({
             x: x,
             y: yPos,
             fontFamily: this.fontFamily,
@@ -100,11 +104,11 @@ class DebuggingSquare
                 + (mainLayer.y + mainLayer.height) + ')',
             fill: this.fontColor
         });
-        layer.add(this.pageBounds11);
+        layer.add(this.layerBounds11);
 
         //Selected Page Scale
         yPos += this.fontSize;
-        this.pageScale = new Konva.Text({
+        this.layerScale = new Konva.Text({
             x: x,
             y: yPos,
             fontFamily: this.fontFamily,
@@ -113,10 +117,10 @@ class DebuggingSquare
                 + mainLayer.getScale().x,
             fill: this.fontColor
         });
-        layer.add(this.pageScale);
+        layer.add(this.layerScale);
 
         yPos += this.fontSize;
-        this.pageSize = new Konva.Text({
+        this.currentLayer = new Konva.Text({
             x: x,
             y: yPos,
             fontFamily: this.fontFamily,
@@ -124,11 +128,11 @@ class DebuggingSquare
             text: 'currentLayer: ' + 0,
             fill: this.fontColor
         });
-        layer.add(this.pageSize);
+        layer.add(this.currentLayer);
 
         //Selected Page Size
         yPos += this.fontSize;
-        this.pageSize = new Konva.Text({
+        this.layerSize = new Konva.Text({
             x: x,
             y: yPos,
             fontFamily: this.fontFamily,
@@ -138,7 +142,84 @@ class DebuggingSquare
             + mainLayer.height + ')',
             fill: this.fontColor
         });
+        layer.add(this.layerSize);
+
+        //Selected Page Bounds
+        yPos += this.fontSize;
+        this.pageBounds00 = new Konva.Text({
+            x: x,
+            y: yPos,
+            fontFamily: this.fontFamily,
+            fontSize: this.fontSize,
+            text: 'selectedPage00: (' + mainLayer.x + ',' 
+                + mainLayer.y + ')',
+            fill: this.fontColor
+        });
+        layer.add(this.pageBounds00);
+        this.pageBounds00.setOpacity(0);
+        this.currentPageData.push(this.pageBounds00);
+
+        yPos += this.fontSize;
+        this.pageBounds01 = new Konva.Text({
+            x: x,
+            y: yPos,
+            fontFamily: this.fontFamily,
+            fontSize: this.fontSize,
+            text: 'selectedPage01: ('
+                + mainLayer.x + ','
+                + (mainLayer.y + mainLayer.height) + ')',
+            fill: this.fontColor
+        });
+        layer.add(this.pageBounds01);
+        this.pageBounds01.setOpacity(0);
+        this.currentPageData.push(this.pageBounds01);
+
+        yPos += this.fontSize;
+        this.pageBounds10 = new Konva.Text({
+            x: x,
+            y: yPos,
+            fontFamily: this.fontFamily,
+            fontSize: this.fontSize,
+            text: 'selectedPage10: ('
+                + (mainLayer.x + mainLayer.width) + ','
+                + mainLayer.y + ')',
+            fill: this.fontColor
+        });
+        layer.add(this.pageBounds10);
+        this.pageBounds10.setOpacity(0);
+        this.currentPageData.push(this.pageBounds10);
+
+
+        yPos += this.fontSize;
+        this.pageBounds11 = new Konva.Text({
+            x: x,
+            y: yPos,
+            fontFamily: this.fontFamily,
+            fontSize: this.fontSize,
+            text: 'selectedPage11: ('
+                + (mainLayer.x + mainLayer.width) + ','
+                + (mainLayer.y + mainLayer.height) + ')',
+            fill: this.fontColor
+        });
+        layer.add(this.pageBounds11);
+        this.pageBounds11.setOpacity(0);
+        this.currentPageData.push(this.pageBounds11);
+
+        //Selected Page Size
+        yPos += this.fontSize;
+        this.pageSize = new Konva.Text({
+            x: x,
+            y: yPos,
+            fontFamily: this.fontFamily,
+            fontSize: this.fontSize,
+            text: 'selectedPageSize: ('
+            + mainLayer.width + ','
+            + mainLayer.height + ')',
+            fill: this.fontColor
+        });
         layer.add(this.pageSize);
+        this.pageSize.setOpacity(0);
+        this.currentPageData.push(this.pageSize);
 
         this.layer = layer;
     };
@@ -149,26 +230,25 @@ class DebuggingSquare
         let pos = this.layer.getRelativePointerPosition();
         this.mouse.setText('mouse: (' + pos.x
             + ',' + pos.y + ')');
-        // this.mouseY.setText('mouseY: ' + pos.y);
     }
 
     onPageScale()
     {
-        this.pageScale.setText('layerPageScale: '
+        this.layerScale.setText('layerPageScale: '
             + this.mainLayer.getScale().x.toFixed(2));
-        this.pageSize.setText('layerPageSize: ('
+        this.layerSize.setText('layerPageSize: ('
         + this.mainLayer.width + ','
         + this.mainLayer.height + ')');
-        this.pageBounds00.setText('layerPage00: ('
+        this.layerBounds00.setText('layerPage00: ('
             + this.mainLayer.x + ','
             + this.mainLayer.y + ')');
-        this.pageBounds01.setText('layerPage01: ('
+        this.layerBounds01.setText('layerPage01: ('
             + this.mainLayer.x + ','
             + (this.mainLayer.y + this.mainLayer.height) + ')');
-        this.pageBounds10.setText('layerPage10: ('
+        this.layerBounds10.setText('layerPage10: ('
                 + (this.mainLayer.x + this.mainLayer.width) + ','
                 + this.mainLayer.y + ')');
-        this.pageBounds11.setText('layerPage11: ('
+        this.layerBounds11.setText('layerPage11: ('
                 + (this.mainLayer.x + this.mainLayer.width) + ','
                 + (this.mainLayer.y + this.mainLayer.height) + ')');
     }
@@ -181,5 +261,23 @@ class DebuggingSquare
     setOpacity(opacity)
     {
         this.layer.setOpacity(opacity);
+    }
+
+    setCurrentPage(currentPage)
+    {
+        this.currentPage = currentPage;
+        for (let pagedata of this.currentPageData)
+        {
+            pagedata.setOpacity(1);
+        }
+    }
+
+    removeCurrentPage()
+    {
+        this.currentPage = null;
+        for (let pagedata of this.currentPageData)
+        {
+            pagedata.setOpacity(0);
+        }
     }
 }

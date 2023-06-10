@@ -10,6 +10,7 @@ class Page
         this.fill = '#6f6f6f';
         this.x = x;
         this.y = y;
+        this.mouseEntered = false;
 
         let group = new Konva.Group({
             x: x,
@@ -80,10 +81,32 @@ class Page
         }
     }
 
-    showHorizontalSliceGuideLine(mousePos)
+    onMouseMove()
     {
-        let relativePositionUnscaled = this.getRelativePositionUnscaled(mousePos);
-        let mouseBoundsData = this.getMouseBoundsData(mousePos);
+        let relativeMouse = this.group.getRelativePointerPosition();
+        let mouseBoundsData = this.getMouseBoundsData(relativeMouse);
+        if (mouseBoundsData.inBounds.y && mouseBoundsData.inBounds.x)
+        { 
+            if (!this.mouseEntered)
+            {
+                this.group.fire(PAGEEVENTS.MOUSEENTERED, this);
+                this.mouseEntered = true;
+            }
+        } else 
+        {
+            if (this.mouseEntered)
+            {
+                this.group.fire(PAGEEVENTS.MOUSEEXITED);
+                this.mouseEntered = false;
+            }
+        }
+    }
+
+    showHorizontalSliceGuideLine()
+    {
+        let relativeMouse = this.group.getRelativePointerPosition();
+        let relativePositionUnscaled = this.getRelativePositionUnscaled(relativeMouse);
+        let mouseBoundsData = this.getMouseBoundsData(relativeMouse);
 
         //Set Ruler position
         this.verticalRuler.setLeftOffset(!mouseBoundsData.halfBounds.left);
@@ -110,10 +133,11 @@ class Page
         }
     }
 
-    showVerticalSliceGuideLine(mousePos)
+    showVerticalSliceGuideLine()
     {
-        let relativePositionUnscaled = this.getRelativePositionUnscaled(mousePos);
-        let mouseBoundsData = this.getMouseBoundsData(mousePos);
+        let relativeMouse = this.group.getRelativePointerPosition();
+        let relativePositionUnscaled = this.getRelativePositionUnscaled(relativeMouse);
+        let mouseBoundsData = this.getMouseBoundsData(relativeMouse);
 
         //Set Ruler position
         this.horizontalRuler.setBottomOffset(!mouseBoundsData.halfBounds.top);
@@ -132,6 +156,7 @@ class Page
             } else 
             {
                 this.horizontalRuler.setOpacity(0);
+                
             }
         } else 
         {

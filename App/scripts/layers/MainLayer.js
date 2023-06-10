@@ -26,8 +26,28 @@ class MainLayer
         group.add(page.group);
         this.page = page;
 
+        let mainLayerRef = this;
+        this.page.group.on(PAGEEVENTS.MOUSEENTERED, function (page)
+        {
+            mainLayerRef.onPageMouseEntered();
+        });
+
+        this.page.group.on(PAGEEVENTS.MOUSEEXITED, function ()
+        {
+            mainLayerRef.onPageMouseExited();
+        });
 
         this.layer = layer;
+    }
+
+    onPageMouseEntered(page)
+    {
+        this.layer.fire(PAGEEVENTS.MOUSEENTERED, page);
+    }
+
+    onPageMouseExited()
+    {
+        this.layer.fire(PAGEEVENTS.MOUSEEXITED);
     }
 
     onStateChanged(newState)
@@ -39,13 +59,14 @@ class MainLayer
     onMouseMove()
     {
         let pos = this.layer.getRelativePointerPosition();
+        this.page.onMouseMove();
         switch (this.state)
         {
             case APPSTATE.HORIZONTALSLICE:
-                this.page.showHorizontalSliceGuideLine(pos);
+                this.page.showHorizontalSliceGuideLine();
                 break;
             case APPSTATE.VERTICALSLICE:
-                this.page.showVerticalSliceGuideLine(pos);
+                this.page.showVerticalSliceGuideLine();
                 break;
         }
     }
@@ -79,10 +100,7 @@ class MainLayer
             x: this.x,
             y: this.y
         }
-        console.log('Before pos, ', { x: this.group.x(), y: this.group.y() });
-
         this.group.setAttrs(newGroupPos);
-        console.log('After pos, ', { x: this.group.x(), y: this.group.y() });
     }
 
     scaleBy(scaleRatio)
