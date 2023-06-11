@@ -11,11 +11,36 @@ class Page
         this.x = x;
         this.y = y;
         this.mouseEntered = false;
+        this.gradientOutlineAmount = 6;
+        this.gradientWidth = 30;
+        this.gradient = [];
 
         let group = new Konva.Group({
             x: x,
             y: y
         });
+
+        //Generate gradient
+        let gradientOpacityDivision = 1 / this.gradientOutlineAmount;
+        let gradientWidthDivision = this.gradientWidth / this.gradientOutlineAmount;
+        for (let i = 1; i <= this.gradientOutlineAmount; i++)
+        {
+            let strokeWidth = this.gradientWidth - (gradientWidthDivision * (i-1));
+            let gradientOpacity = gradientOpacityDivision * i;
+            let strokeColor = `rgba(186, 104, 237, ${gradientOpacity})`;
+            console.log('value test: ', { stroke: strokeWidth, color: strokeColor });
+            let pageShapeOutline = new Konva.Rect({
+                x: 0,
+                y: 0,
+                width: this.width,
+                height: this.height,
+                stroke: strokeColor,
+                strokeWidth: strokeWidth
+            })
+            this.gradient.push(pageShapeOutline);
+            group.add(pageShapeOutline);            
+        }
+        this.setGradientOpacity(0);
 
         let pageShape = new Konva.Rect({
             x: 0,
@@ -47,6 +72,7 @@ class Page
         this.horizontalRuler = horizontalRuler;
 
         this.group = group;
+
     }
 
     setPosition(x, y)
@@ -91,6 +117,7 @@ class Page
             {
                 this.group.fire(PAGEEVENTS.MOUSEENTERED, this);
                 this.mouseEntered = true;
+                this.setGradientOpacity(1);
             }
         } else 
         {
@@ -98,6 +125,7 @@ class Page
             {
                 this.group.fire(PAGEEVENTS.MOUSEEXITED);
                 this.mouseEntered = false;
+                this.setGradientOpacity(0);
             }
         }
     }
@@ -217,5 +245,13 @@ class Page
             }
         };
         return mouseBoundsData;
+    }
+
+    setGradientOpacity(newOpacity)
+    {
+        for (let gradient of this.gradient)
+        {
+            gradient.setOpacity(newOpacity);    
+        }
     }
 }   
