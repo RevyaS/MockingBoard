@@ -12,8 +12,12 @@ class MainLayer
         this.origHeight = 450;
         this.width = this.origWidth;
         this.height = this.origHeight;
+        this.selectedPage = null;
+        this.currentLayer = 0;
 
         //Group of layers
+        this.layers = [];
+        this.outerLayer = [];
         let group = new Konva.Group({
             x: this.x,
             y: this.y
@@ -22,31 +26,36 @@ class MainLayer
         layer.add(group);
 
         //Initial Page Size
-        let page = new Page(0, 0);
+        let page = new Page(0, 0, this.origWidth, this.origHeight, 0);
         group.add(page.group);
         this.page = page;
+        this.layers.push([page]);
+        this.outerLayer.push(page);
 
         let mainLayerRef = this;
         this.page.group.on(PAGEEVENTS.MOUSEENTERED, function (page)
         {
-            mainLayerRef.onPageMouseEntered();
+            mainLayerRef.onPageMouseEntered(page);
         });
 
-        this.page.group.on(PAGEEVENTS.MOUSEEXITED, function ()
-        {
-            mainLayerRef.onPageMouseExited();
-        });
+        // this.page.group.on(PAGEEVENTS.MOUSEEXITED, function ()
+        // {
+        //     mainLayerRef.onPageMouseExited();
+        // });
 
         this.layer = layer;
     }
 
     onPageMouseEntered(page)
     {
+        this.selectedPage = page;
         this.layer.fire(PAGEEVENTS.MOUSEENTERED, page);
+        console.log('mouse entered page', this.layers);
     }
 
     onPageMouseExited()
     {
+        this.selectedPage = null;
         this.layer.fire(PAGEEVENTS.MOUSEEXITED);
     }
 
@@ -58,16 +67,27 @@ class MainLayer
 
     onMouseMove()
     {
-        let pos = this.layer.getRelativePointerPosition();
-        this.page.onMouseMove();
-        switch (this.state)
+        //Check if within layer bounds
+        let relativeMouse = this.group.getRelativePointerPosition();
+        let mouseBoundsData = this.getMouseBoundsData(relativeMouse);
+        if (!mouseBoundsData.inBounds.y || !mouseBoundsData.inBounds.x)
         {
-            case APPSTATE.HORIZONTALSLICE:
-                this.page.showHorizontalSliceGuideLine();
-                break;
-            case APPSTATE.VERTICALSLICE:
-                this.page.showVerticalSliceGuideLine();
-                break;
+            this.onPageMouseExited();
+            console.log('mouse exited');
+        }
+
+        for (let page of this.outerLayer)
+        {
+            page.onMouseMove();
+            switch (this.state)
+            {
+                case APPSTATE.HORIZONTALSLICE:
+                    page.showHorizontalSliceGuideLine();
+                    break;
+                case APPSTATE.VERTICALSLICE:
+                    page.showVerticalSliceGuideLine();
+                    break;
+            }            
         }
     }
 
@@ -121,4 +141,120 @@ class MainLayer
     {
         return this.group.scale();
     }
+
+    onMouseClicked()
+    {
+        let pos = this.layer.getRelativePointerPosition();
+
+        //Find Division
+        let relativePos = this.getRelativePositionUnscaled(pos);
+        if (this.selectedPage == null) return;
+        this.sliceVertically(relativePos);
+
+    }
+
+    sliceVertically(mousePos)
+    {
+        let layerPages = [];
+        let parentPage = this.selectedPage;
+        this.removeElementByValue(this.outerLayer, this.selectedPage);
+        this.selectedPage.mouseExit();
+        this.currentLayer++;
+
+        console.log('outer layer test', this.outerLayer);
+        console.log('mouse Pos test, ', mousePos);
+        //Create top position based on selected page
+        let height = Math.floor(mousePos.y - parentPage.y);
+        let topPage = new Page(parentPage.x,
+            parentPage.y,
+            parentPage.origWidth,
+            height, this.currentLayer);
+        this.group.add(topPage.group);
+        layerPages.push(topPage);
+        this.outerLayer.push(topPage);
+        let mainLayerRef = this;
+        topPage.group.on(PAGEEVENTS.MOUSEENTERED, function (page)
+        {
+            mainLayerRef.onPageMouseEntered(page);
+        });
+
+
+        let remainingHeight = parentPage.origHeight - height;
+        let bottomPage = new Page(parentPage.x,
+            height + parentPage.y,
+            parentPage.origWidth,
+            remainingHeight, this.currentLayer);
+        this.group.add(bottomPage.group);
+        bottomPage.group.on(PAGEEVENTS.MOUSEENTERED, function (page)
+        {
+            mainLayerRef.onPageMouseEntered(page);
+        });
+
+        layerPages.push(bottomPage);
+        this.outerLayer.push(bottomPage);
+        this.layers.push(layerPages);
+    }
+
+    getRelativePositionUnscaled(mousePos)
+    {
+        //Compute Relative Position of mouse to Page
+        let relativePosition = {
+            x: mousePos.x - this.x,
+            y: mousePos.y - this.y,
+        };
+        //Get Ratio
+        let relativeRatio = {
+            x: relativePosition.x / this.width,
+            y: relativePosition.y / this.height
+        }
+        let relativePositionUnscaled = {
+            x: this.origWidth * relativeRatio.x,
+            y: this.origHeight * relativeRatio.y,
+        }
+
+        return relativePositionUnscaled;
+    }
+
+    getMouseBoundsData(mousePos)
+    {
+        let topYBounds = 0 > mousePos.y;
+        let bottomYBounds = this.origHeight <= mousePos.y;
+        let inYBounds = !(topYBounds || bottomYBounds);
+
+        let onTopHalf = this.y + (this.height/2) > mousePos.y;
+        let onLeftHalf =  this.x + (this.width/2) > mousePos.x
+
+        let topXBounds = 0 > mousePos.x;
+        let bottomXBounds = this.origWidth < mousePos.x;
+        let inXBounds = !(topXBounds || bottomXBounds);
+
+        let mouseBoundsData = {
+            topBounds: {
+                x: topXBounds,
+                y: topYBounds
+            },
+            bottomBounds: {
+                x: bottomXBounds,
+                y: bottomYBounds
+            },
+            inBounds: {
+                x: inXBounds,
+                y: inYBounds
+            },
+            halfBounds: {
+                top: onTopHalf,
+                left: onLeftHalf
+            }
+        };
+        return mouseBoundsData;
+    }
+
+    removeElementByValue(arr, value) {
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[i] === value) {
+            arr.splice(i, 1);
+            i--; // Decrement index to recheck the current index after removal
+          }
+        }
+      }
 }

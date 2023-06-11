@@ -189,7 +189,6 @@ class DebuggingSquare
         this.pageBounds10.setOpacity(0);
         this.currentPageData.push(this.pageBounds10);
 
-
         yPos += this.fontSize;
         this.pageBounds11 = new Konva.Text({
             x: x,
@@ -269,6 +268,36 @@ class DebuggingSquare
         for (let pagedata of this.currentPageData)
         {
             pagedata.setOpacity(1);
+            //Update values
+            this.pageBounds00.setAttrs({
+                text: 'selectedPage00: (' + currentPage.x + ',' 
+                    + currentPage.y + ')',
+            });
+    
+            this.pageBounds01.setAttrs({
+                text: 'selectedPage01: ('
+                    + currentPage.x + ','
+                    + (currentPage.y + currentPage.height) + ')',
+            });
+    
+            this.pageBounds10.setAttrs({
+                text: 'selectedPage10: ('
+                    + (currentPage.x + currentPage.width) + ','
+                    + currentPage.y + ')',
+            });
+    
+            this.pageBounds11.setAttrs({
+                text: 'selectedPage11: ('
+                    + (currentPage.x + currentPage.width) + ','
+                    + (currentPage.y + currentPage.height) + ')',
+            });
+    
+            //Selected Page Size
+            this.pageSize.setAttrs({
+                text: 'selectedPageSize: ('
+                + currentPage.width + ','
+                + currentPage.height + ')',
+            });
         }
     }
 

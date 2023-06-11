@@ -1,23 +1,24 @@
 class Page
 {
-    constructor(x, y)
+    constructor(x, y, width, height, layerIndex)
     {
         //Contants
-        this.origWidth = 890;
-        this.origHeight = 450;
-        this.width = 890;
-        this.height = 450;
+        this.origWidth = width;
+        this.origHeight = height;
+        this.width = width;
+        this.height = height;
         this.fill = '#6f6f6f';
         this.x = x;
         this.y = y;
+        this.layerIndex = layerIndex;
+        this.zIndex = layerIndex;
         this.mouseEntered = false;
         this.gradientOutlineAmount = 6;
         this.gradientWidth = 30;
         this.gradient = [];
-
         let group = new Konva.Group({
             x: x,
-            y: y
+            y: y,
         });
 
         //Generate gradient
@@ -28,28 +29,28 @@ class Page
             let strokeWidth = this.gradientWidth - (gradientWidthDivision * (i-1));
             let gradientOpacity = gradientOpacityDivision * i;
             let strokeColor = `rgba(186, 104, 237, ${gradientOpacity})`;
-            console.log('value test: ', { stroke: strokeWidth, color: strokeColor });
+            // console.log('value test: ', { stroke: strokeWidth, color: strokeColor });
             let pageShapeOutline = new Konva.Rect({
                 x: 0,
                 y: 0,
                 width: this.width,
                 height: this.height,
                 stroke: strokeColor,
-                strokeWidth: strokeWidth
-            })
+                strokeWidth: strokeWidth,
+            });
             this.gradient.push(pageShapeOutline);
             group.add(pageShapeOutline);            
         }
         this.setGradientOpacity(0);
 
-        let pageShape = new Konva.Rect({
+        this.pageShape = new Konva.Rect({
             x: 0,
             y: 0,
             width: this.width,
             height: this.height,
-            fill: this.fill
+            fill: this.fill,
         })
-        group.add(pageShape);
+        group.add(this.pageShape);
 
         let horizontalSliceGuideLine = new HorizontalSliceGuide(0, 0, this.width);
         group.add(horizontalSliceGuideLine.group);
@@ -111,22 +112,38 @@ class Page
     {
         let relativeMouse = this.group.getRelativePointerPosition();
         let mouseBoundsData = this.getMouseBoundsData(relativeMouse);
+        // console.log('pos: ', this.x, this.y);
+        // console.log('values: ', mouseBoundsData.inBounds);
         if (mouseBoundsData.inBounds.y && mouseBoundsData.inBounds.x)
         { 
-            if (!this.mouseEntered)
-            {
-                this.group.fire(PAGEEVENTS.MOUSEENTERED, this);
-                this.mouseEntered = true;
-                this.setGradientOpacity(1);
-            }
+            this.mouseEnter();
         } else 
         {
-            if (this.mouseEntered)
-            {
-                this.group.fire(PAGEEVENTS.MOUSEEXITED);
-                this.mouseEntered = false;
-                this.setGradientOpacity(0);
-            }
+            this.mouseExit();
+        }
+    }
+
+    mouseEnter()
+    {
+        if (!this.mouseEntered)
+        {
+            this.mouseEntered = true;
+            this.setGradientOpacity(1);
+            this.zIndex = this.group.parent.children.length - 1;
+            this.group.zIndex(this.zIndex);
+            this.group.fire(PAGEEVENTS.MOUSEENTERED, this);
+        }
+    }
+
+    mouseExit()
+    {
+        if (this.mouseEntered)
+        {
+            // this.group.fire(PAGEEVENTS.MOUSEEXITED);
+            this.mouseEntered = false;
+            this.setGradientOpacity(0);
+            this.zIndex = this.layerIndex;
+            this.group.zIndex(this.zIndex);
         }
     }
 
@@ -215,11 +232,10 @@ class Page
 
     getMouseBoundsData(mousePos)
     {
-        let topYBounds = this.y > mousePos.y;
-        let bottomYBounds = this.y + this.height < mousePos.y;
+        let topYBounds = this.y > mousePos.y + this.y;
+        let bottomYBounds = this.y + this.height <= mousePos.y + this.y;
         let inYBounds = !(topYBounds || bottomYBounds);
-
-        let onTopHalf = this.y + (this.height/2) > mousePos.y;
+        let onTopHalf = this.y + (this.height/2) > mousePos.y + this.y;
         let onLeftHalf =  this.x + (this.width/2) > mousePos.x
 
         let topXBounds = this.x > mousePos.x;
@@ -253,5 +269,17 @@ class Page
         {
             gradient.setOpacity(newOpacity);    
         }
+    }
+
+    setFillColor(newColor)
+    {
+        this.pageShape.setAttrs({
+            fill: newColor
+        })
+    }
+
+    setOpacity(newOpacity)
+    {
+        this.group.setOpacity(newOpacity);
     }
 }   
