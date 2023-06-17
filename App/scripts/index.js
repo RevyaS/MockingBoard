@@ -86,7 +86,6 @@ function eventSetup()
     });
 
     stage.on('pointerclick', function (e) {
-        console.log('Pointer click triggered', e);
         if (e.evt.button == 0)
         {
             stage.fire(STAGEEVENTS.LEFTMOUSECLICKED);

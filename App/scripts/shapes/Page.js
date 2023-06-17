@@ -30,7 +30,6 @@ class Page
             let strokeWidth = this.gradientWidth - (gradientWidthDivision * (i-1));
             let gradientOpacity = gradientOpacityDivision * i;
             let strokeColor = `rgba(186, 104, 237, ${gradientOpacity})`;
-            // console.log('value test: ', { stroke: strokeWidth, color: strokeColor });
             let pageShapeOutline = new Konva.Rect({
                 x: 0,
                 y: 0,
@@ -114,8 +113,6 @@ class Page
     {
         let relativeMouse = this.group.getRelativePointerPosition();
         let mouseBoundsData = this.getMouseBoundsData(relativeMouse);
-        // console.log('pos: ', this.x, this.y);
-        // console.log('values: ', mouseBoundsData.inBounds);
         if (mouseBoundsData.inBounds.y && mouseBoundsData.inBounds.x)
         { 
             this.mouseEnter();
@@ -172,7 +169,6 @@ class Page
         if (mouseBoundsData.inBounds.y)
         {
             this.horizontalSliceGuideLine.setOpacity(1);
-            console.log('show y: ', this.y);
             this.horizontalSliceGuideLine.setYPosition(relativePositionFromParent.y)       
         
             //Show ruler
@@ -254,17 +250,17 @@ class Page
         let onTopHalf = this.y + (this.height/2) > mousePos.y + this.y;
         let onLeftHalf =  this.x + (this.width/2) > mousePos.x
 
-        let topXBounds = this.x > mousePos.x;
-        let bottomXBounds = this.x + this.width < mousePos.x;
-        let inXBounds = !(topXBounds || bottomXBounds);
+        let rightXBounds = this.x > mousePos.x + this.x;
+        let leftXBounds = this.x + this.width < mousePos.x + this.x;
+        let inXBounds = !(rightXBounds || leftXBounds);
 
         let mouseBoundsData = {
             topBounds: {
-                x: topXBounds,
+                x: rightXBounds,
                 y: topYBounds
             },
             bottomBounds: {
-                x: bottomXBounds,
+                x: leftXBounds,
                 y: bottomYBounds
             },
             inBounds: {

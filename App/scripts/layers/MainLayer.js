@@ -38,11 +38,6 @@ class MainLayer
             mainLayerRef.onPageMouseEntered(page);
         });
 
-        // this.page.group.on(PAGEEVENTS.MOUSEEXITED, function ()
-        // {
-        //     mainLayerRef.onPageMouseExited();
-        // });
-
         this.layer = layer;
     }
 
@@ -50,7 +45,6 @@ class MainLayer
     {
         this.selectedPage = page;
         this.layer.fire(PAGEEVENTS.MOUSEENTERED, page);
-        console.log('mouse entered page', this.outerLayer);
     }
 
     onPageMouseExited()
@@ -76,7 +70,6 @@ class MainLayer
         if (!mouseBoundsData.inBounds.y || !mouseBoundsData.inBounds.x)
         {
             this.onPageMouseExited();
-            console.log('mouse exited');
         }
 
         for (let page of this.outerLayer)
@@ -85,7 +78,6 @@ class MainLayer
         }
 
         
-        // console.log('selectedPage null? ', this.selectedPage);
         if (this.selectedPage == null) return;
         switch (this.state)
         {
@@ -156,11 +148,15 @@ class MainLayer
         //Find Division
         let relativePos = this.getRelativePositionUnscaled(pos);
         if (this.selectedPage == null) return;
-        if (this.state == APPSTATE.HORIZONTALSLICE)
+        switch (this.state)
         {
-            this.sliceVertically(relativePos);
+            case APPSTATE.HORIZONTALSLICE:
+                this.sliceVertically(relativePos);
+                break;
+            case APPSTATE.VERTICALSLICE:
+                this.sliceHorizontally(relativePos);
+                break;
         }
-
     }
 
     sliceVertically(mousePos)
@@ -168,13 +164,10 @@ class MainLayer
         let layerPages = [];
         let parentPage = this.selectedPage;
         this.removeElementByValue(this.outerLayer, this.selectedPage);
-        console.log('selected page exit');
         this.selectedPage.mouseExit();
         this.selectedPage.setState(APPSTATE.DEFAULT);
         this.currentLayer++;
 
-        console.log('outer layer test', this.outerLayer);
-        // console.log('mouse Pos test, ', mousePos);
         //Create top position based on selected page
         let height = Math.floor(mousePos.y - parentPage.y);
         let topPage = new Page(parentPage.x,
@@ -197,13 +190,52 @@ class MainLayer
             parentPage.origWidth,
             remainingHeight, this.currentLayer);
         this.group.add(bottomPage.group);
+        layerPages.push(bottomPage);
+        this.outerLayer.push(bottomPage); 
         bottomPage.group.on(PAGEEVENTS.MOUSEENTERED, function (page)
         {
             mainLayerRef.onPageMouseEntered(page);
         });
 
-        layerPages.push(bottomPage);
-        this.outerLayer.push(bottomPage);
+        this.layers.push(layerPages);
+    }
+
+    sliceHorizontally(mousePos)
+    {
+        let layerPages = [];
+        let parentPage = this.selectedPage;
+        this.removeElementByValue(this.outerLayer, this.selectedPage);
+        this.selectedPage.mouseExit();
+        this.currentLayer++;
+
+        //Create left position based on selected page
+        let width = Math.floor(mousePos.x - parentPage.x);
+        let leftPage = new Page(parentPage.x,
+            parentPage.y,
+            width,
+            parentPage.origHeight, this.currentLayer);
+        this.group.add(leftPage.group);
+        layerPages.push(leftPage);
+        this.outerLayer.push(leftPage);
+        let mainLayerRef = this;
+        leftPage.group.on(PAGEEVENTS.MOUSEENTERED, function (page)
+        {
+            mainLayerRef.onPageMouseEntered(page);
+        });
+
+        //Create bottom position layer
+        let remainingWidth = parentPage.origWidth - width;
+        let rightPage = new Page(parentPage.x + width,
+            parentPage.y,
+            remainingWidth,
+            parentPage.origHeight, this.currentLayer);
+        this.group.add(rightPage.group);
+        rightPage.group.on(PAGEEVENTS.MOUSEENTERED, function (page)
+        {
+            mainLayerRef.onPageMouseEntered(page);
+        });
+        layerPages.push(rightPage);
+        this.outerLayer.push(rightPage);
         this.layers.push(layerPages);
     }
 
