@@ -13,11 +13,6 @@ var verticalSliceButton;
 //Canvas Variables
 var stage;
 
-//Events
-var mouseMovedEvent;
-var mouseWheelEvent;
-var appStateChanged;
-
 $(document).ready(() => 
 {
     appState = APPSTATE.DEFAULT;
@@ -30,11 +25,6 @@ $(document).ready(() =>
     componentListToggle = $('#componentListToggle');
     bodyContainer = $('#bodyContainer');
     html = $('html');
-    
-
-    mouseMovedEvent = 'mouseMoved';
-    mouseWheelEvent = 'mouseWheel';
-    appStateChanged = 'appStateChanged';
 
     //Initial Setup
     itemList.hide();
@@ -54,20 +44,32 @@ function konvaSetup()
 
     //DEBUG Items
     let mainLayer = new MainLayer();
-    let debugSquare = new DebuggingSquare(25, 0, mainLayer.page);
+    let debugSquare = new DebuggingSquare(25, 0, mainLayer);
 
-    stage.on(mouseMovedEvent, () => {
+    mainLayer.layer.on(PAGEEVENTS.MOUSEENTERED, (page) => {
+        debugSquare.setCurrentPage(page);
+    })
+
+    mainLayer.layer.on(PAGEEVENTS.MOUSEEXITED, () => {
+        debugSquare.removeCurrentPage();
+    })
+
+    stage.on(STAGEEVENTS.LEFTMOUSECLICKED, () => {
+        mainLayer.onMouseClicked();
+    });
+
+    stage.on(STAGEEVENTS.MOUSEMOVED, () => {
         debugSquare.onMouseMove();
         mainLayer.onMouseMove();
     });
 
-    stage.on(mouseWheelEvent, (evt) => {
+    stage.on(STAGEEVENTS.MOUSEWHEEL, (evt) => {
         let deltaY = evt.evt.deltaY;
         mainLayer.zoomPage(deltaY);
         debugSquare.onPageScale();
     });
 
-    stage.on(appStateChanged, () => {
+    stage.on(STAGEEVENTS.APPSTATECHANGED, () => {
         debugSquare.onStateChanged(appState);
         mainLayer.onStateChanged(appState);
     });
@@ -79,30 +81,36 @@ function konvaSetup()
 function eventSetup()
 {
     stage.on('mousemove', function () {
-        stage.fire(mouseMovedEvent);
+        stage.fire(STAGEEVENTS.MOUSEMOVED);
+    });
+
+    stage.on('pointerclick', function (e) {
+        if (e.evt.button == 0)
+        {
+            stage.fire(STAGEEVENTS.LEFTMOUSECLICKED);
+        }
     });
 
     stage.on('wheel', function (evt) {
-        stage.fire(mouseWheelEvent, evt);
+        stage.fire(STAGEEVENTS.MOUSEWHEEL, evt);
     });
 
     horizontalSliceButton.on('click', function () {
         appState = APPSTATE.HORIZONTALSLICE;
-        stage.fire(appStateChanged);
+        stage.fire(STAGEEVENTS.APPSTATECHANGED);
     });
 
     verticalSliceButton.on('click', function () {
         appState = APPSTATE.VERTICALSLICE;
-        stage.fire(appStateChanged);
+        stage.fire(STAGEEVENTS.APPSTATECHANGED);
     });
 
     //Right click on app
-    html.on('contextmenu', function (ev)
-    {
+    html.on('contextmenu', function (ev) {
         appState = APPSTATE.DEFAULT;
-        stage.fire(appStateChanged);
+        stage.fire(STAGEEVENTS.APPSTATECHANGED);
         ev.preventDefault();
-    })
+    });
 }
 
 //Event Functions
