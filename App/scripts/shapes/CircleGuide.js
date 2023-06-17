@@ -46,11 +46,13 @@ class CircleGuide
         return pos;
     }
     
-    setXPosition(x)
+    setXYPosition(x, y)
     {
         this.x = Math.floor(x);
+        this.y = Math.floor(y);
         this.group.setAttrs({
-            x: this.x
+            x: this.x,
+            y: this.y,
         });
     }
     

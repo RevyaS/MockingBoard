@@ -98,7 +98,7 @@ class Page
             case APPSTATE.DEFAULT:
                 this.horizontalSliceGuideLine.setOpacity(0);
                 this.verticalSliceGuideLine.setOpacity(0);
-                
+                this.circleGuideLine.setOpacity(0);
                 break;
         }
     }
@@ -153,10 +153,9 @@ class Page
     
     showCircleGuideLine(mousePos)
     {
-        //* Compute Relative Position of mouse to Page
-        // this.circleGuideLine.set
-        
+        //* Compute Relative Position of mouse to Page        
+        this.circleGuideLine.setXYPosition(mousePos.x - this.x, mousePos.y - this.y);
         this.circleGuideLine.setOpacity(1);
-        // this.circleGuideLine.setXPosition
+
     }
 }   
