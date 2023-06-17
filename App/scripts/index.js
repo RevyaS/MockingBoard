@@ -136,7 +136,7 @@ function handleComponentButtonClick(buttonName)
     if(buttonName == "0")
     {
         log('Circle button clicked');
-        appState = APPSTATE.DEFAULT;
+        appState = APPSTATE.CIRCLE;
         stage.fire(appStateChanged);
     }
 }

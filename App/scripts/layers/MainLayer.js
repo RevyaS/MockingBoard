@@ -30,6 +30,9 @@ class MainLayer
             case APPSTATE.VERTICALSLICE:
                 this.page.showVerticalSliceGuideLine(pos);
                 break;
+            case APPSTATE.CIRCLE:
+                this.page.showCircleGuideLine(pos);
+                break;
         }
     }
 

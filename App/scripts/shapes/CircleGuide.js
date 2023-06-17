@@ -1,3 +1,5 @@
+// const { default: Konva } = require("lib/konva");
+
 class CircleGuide
 {
     constructor(x, y, radius)
@@ -11,21 +13,22 @@ class CircleGuide
         });
         
         let outline = new Konva.Circle({
-            x: 0,
-            y: 0,
-            radius: 50,
-            fill: 'red',
-            draggable: true
+            x: x,
+            y: y,
+            radius: radius,
+            fill: 'white',
+            draggable: true,
+            
         });
         
         group.add(outline);
         outline.setOpacity(0);
         
         let circle = new Konva.Circle({
-            x: 0,
-            y: 0,
-            radius: 50,
-            fill: 'red',
+            x: x,
+            y: y,
+            radius: radius,
+            fill: 'blue',
             draggable: true
         });
         

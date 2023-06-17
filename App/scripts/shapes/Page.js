@@ -34,6 +34,11 @@ class Page
         group.add(verticalSliceGuideLine.group);
         verticalSliceGuideLine.setOpacity(0);
         this.verticalSliceGuideLine = verticalSliceGuideLine;
+        
+        let circleGuideLine = new CircleGuide(0, 0, 50);
+        group.add(circleGuideLine.group);
+        circleGuideLine.setOpacity(0);
+        this.circleGuideLine = circleGuideLine;
 
         this.group = group;
     }
@@ -93,6 +98,7 @@ class Page
             case APPSTATE.DEFAULT:
                 this.horizontalSliceGuideLine.setOpacity(0);
                 this.verticalSliceGuideLine.setOpacity(0);
+                
                 break;
         }
     }
@@ -143,5 +149,14 @@ class Page
         {
             this.verticalSliceGuideLine.setOpacity(0);
         }
+    }
+    
+    showCircleGuideLine(mousePos)
+    {
+        //* Compute Relative Position of mouse to Page
+        // this.circleGuideLine.set
+        
+        this.circleGuideLine.setOpacity(1);
+        // this.circleGuideLine.setXPosition
     }
 }   
