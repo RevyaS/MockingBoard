@@ -37,6 +37,11 @@ class CircleGuide
         this.group = group;
     }
     
+    setZIndex(maxZIndex)
+    {
+        this.group.zIndex(maxZIndex);
+    }
+    
     getPosition()
     {
         let pos = {

@@ -1,34 +1,66 @@
 class Page
 {
-    constructor(x, y)
+    constructor(x, y, width, height, layerIndex)
     {
         //Contants
-        this.origWidth = 890;
-        this.origHeight = 450;
-        this.width = 890;
-        this.height = 450;
+        this.origWidth = width;
+        this.origHeight = height;
+        this.width = width;
+        this.height = height;
         this.fill = '#6f6f6f';
         this.x = x;
         this.y = y;
-
+        this.layerIndex = layerIndex;
+        this.zIndex = layerIndex;
+        this.mouseEntered = false;
+        this.gradientOutlineAmount = 6;
+        this.gradientWidth = 30;
+        this.gradient = [];
+        this.state = APPSTATE.DEFAULT;
         let group = new Konva.Group({
             x: x,
-            y: y
+            y: y,
         });
 
-        let pageShape = new Konva.Rect({
+        //Generate gradient
+        let gradientOpacityDivision = 1 / this.gradientOutlineAmount;
+        let gradientWidthDivision = this.gradientWidth / this.gradientOutlineAmount;
+        for (let i = 1; i <= this.gradientOutlineAmount; i++)
+        {
+            let strokeWidth = this.gradientWidth - (gradientWidthDivision * (i-1));
+            let gradientOpacity = gradientOpacityDivision * i;
+            let strokeColor = `rgba(186, 104, 237, ${gradientOpacity})`;
+            let pageShapeOutline = new Konva.Rect({
+                x: 0,
+                y: 0,
+                width: this.width,
+                height: this.height,
+                stroke: strokeColor,
+                strokeWidth: strokeWidth,
+            });
+            this.gradient.push(pageShapeOutline);
+            group.add(pageShapeOutline);            
+        }
+        this.setGradientOpacity(0);
+
+        this.pageShape = new Konva.Rect({
             x: 0,
             y: 0,
             width: this.width,
             height: this.height,
-            fill: this.fill
+            fill: this.fill,
         })
-        group.add(pageShape);
+        group.add(this.pageShape);
 
         let horizontalSliceGuideLine = new HorizontalSliceGuide(0, 0, this.width);
         group.add(horizontalSliceGuideLine.group);
         horizontalSliceGuideLine.setOpacity(0);
         this.horizontalSliceGuideLine = horizontalSliceGuideLine;
+
+        let verticalRuler = new VerticalRuler(0, 0, 100, this.height, true);
+        group.add(verticalRuler.group);
+        verticalRuler.setOpacity(0);
+        this.verticalRuler = verticalRuler;
 
         let verticalSliceGuideLine = new VerticalSliceGuide(0, 0, this.height);
         group.add(verticalSliceGuideLine.group);
@@ -40,36 +72,13 @@ class Page
         circleGuideLine.setOpacity(0);
         this.circleGuideLine = circleGuideLine;
 
+        let horizontalRuler = new HorizontalRuler(0, 0, 100, this.width, true);
+        group.add(horizontalRuler.group);
+        horizontalRuler.setOpacity(0);
+        this.horizontalRuler = horizontalRuler;
+
         this.group = group;
-    }
 
-    getScale()
-    {
-        return this.group.scale();
-    }
-
-    getInverseScale()
-    {
-        let scale = this.getScale();
-        let inverseScale = {
-            x: Math.abs(scale.x - 2),
-            y: Math.abs(scale.y - 2)
-        }
-        return inverseScale;
-    }
-
-    scaleBy(scaleRatio)
-    {
-        let currScale = this.getScale();
-        let scaleX = currScale.x * scaleRatio;
-        let scaleY = currScale.y * scaleRatio;
-        let newScale = {
-            x: scaleX,
-            y: scaleY
-        };
-        this.width = Math.floor(this.origWidth * scaleX);
-        this.height = Math.floor(this.origHeight * scaleX);
-        this.group.scale(newScale);
     }
 
     setPosition(x, y)
@@ -93,69 +102,218 @@ class Page
 
     setState(newState)
     {
+        this.state = newState;
         switch (newState)
         {
             case APPSTATE.DEFAULT:
                 this.horizontalSliceGuideLine.setOpacity(0);
                 this.verticalSliceGuideLine.setOpacity(0);
                 this.circleGuideLine.setOpacity(0);
+                this.horizontalRuler.setOpacity(0);
+                this.verticalRuler.setOpacity(0);
                 break;
         }
     }
 
-    showHorizontalSliceGuideLine(mousePos)
+    onMouseMove()
     {
-        //Compute for mouse in Y Bounds
-        let topYBounds = this.y > mousePos.y;
-        let bottomYBounds = this.y + this.height < mousePos.y;
-        let inYBounds = !(topYBounds || bottomYBounds);
-
-        //Compute Relative Position of mouse to Page
-        let relativeYPosition = mousePos.y - this.y;
-        //Get Ratio
-        let relativeYRatio = relativeYPosition / this.height;
-        let relativeYPositionUnscaled = this.origHeight * relativeYRatio;
-
-        //Move guideline
-        if (inYBounds)
-        {
-            this.horizontalSliceGuideLine.setOpacity(1);
-            this.horizontalSliceGuideLine.setYPosition(relativeYPositionUnscaled)       
+        let relativeMouse = this.group.getRelativePointerPosition();
+        let mouseBoundsData = this.getMouseBoundsData(relativeMouse);
+        if (mouseBoundsData.inBounds.y && mouseBoundsData.inBounds.x)
+        { 
+            this.mouseEnter();
         } else 
         {
-            this.horizontalSliceGuideLine.setOpacity(0);
+            this.mouseExit();
         }
     }
 
-    showVerticalSliceGuideLine(mousePos)
+    mouseEnter()
     {
-        //Compute for mouse in x Bounds
-        let topXBounds = this.x > mousePos.x;
-        let bottomXBounds = this.x + this.width < mousePos.x;
-        let inXBounds = !(topXBounds || bottomXBounds);
+        if (!this.mouseEntered)
+        {
+            this.mouseEntered = true;
+            this.setGradientOpacity(1);
+            this.zIndex = this.group.parent.children.length - 1;
+            this.group.zIndex(this.zIndex);
+            
+            this.group.fire(PAGEEVENTS.MOUSEENTERED, this);
+        }
+    }
 
-        //Compute Relative Position of mouse to Page
-        let relativeXPosition = mousePos.x - this.x;
-        //Get Ratio
-        let relativeXRatio = relativeXPosition / this.width;
-        let relativeXPositionUnscaled = this.origWidth * relativeXRatio;
+    mouseExit()
+    {
+        if (this.mouseEntered)
+        {
+            this.mouseEntered = false;
+            this.setGradientOpacity(0);
+            this.zIndex = this.layerIndex;
+            this.group.zIndex(this.zIndex);
+            //Hide guidelines
+            this.horizontalSliceGuideLine.setOpacity(0);
+            this.verticalSliceGuideLine.setOpacity(0);
+            this.circleGuideLine.setOpacity(0);
+            this.horizontalRuler.setOpacity(0);
+            this.verticalRuler.setOpacity(0);
+            this.group.fire(PAGEEVENTS.MOUSEEXITED);
+        }
+    }
+
+    showHorizontalSliceGuideLine()
+    {
+        let relativeMouse = this.group.getRelativePointerPosition();
+        let relativePositionUnscaled = this.getRelativePositionUnscaled(relativeMouse);
+        let mouseBoundsData = this.getMouseBoundsData(relativeMouse);
+        let relativePositionFromParent = {
+            x: relativePositionUnscaled.x + this.x,
+            y: relativePositionUnscaled.y + this.y
+        };
+
+        //Set Ruler position
+        this.verticalRuler.setLeftOffset(!mouseBoundsData.halfBounds.left);
 
         //Move guideline
-        if (inXBounds)
+        if (mouseBoundsData.inBounds.y)
+        {
+            this.horizontalSliceGuideLine.setOpacity(1);
+            this.horizontalSliceGuideLine.setYPosition(relativePositionFromParent.y)       
+        
+            //Show ruler
+            if (mouseBoundsData.inBounds.x)
+            {
+                this.verticalRuler.setOpacity(1);
+                this.verticalRuler.setPosition(relativePositionFromParent);                
+            } else 
+            {
+                this.verticalRuler.setOpacity(0);
+            }
+        } else 
+        {
+            this.horizontalSliceGuideLine.setOpacity(0);
+            this.verticalRuler.setOpacity(0);
+        }
+    }
+
+    showVerticalSliceGuideLine()
+    {
+        let relativeMouse = this.group.getRelativePointerPosition();
+        let relativePositionUnscaled = this.getRelativePositionUnscaled(relativeMouse);
+        let mouseBoundsData = this.getMouseBoundsData(relativeMouse);
+        let relativePositionFromParent = {
+            x: relativePositionUnscaled.x + this.x,
+            y: relativePositionUnscaled.y + this.y
+        };
+        //Set Ruler position
+        this.horizontalRuler.setBottomOffset(!mouseBoundsData.halfBounds.top);
+
+        //Move guideline
+        if (mouseBoundsData.inBounds.x)
         {
             this.verticalSliceGuideLine.setOpacity(1);
-            this.verticalSliceGuideLine.setXPosition(relativeXPositionUnscaled)       
+            this.verticalSliceGuideLine.setXPosition(relativePositionFromParent.x)
+        
+            //Show ruler
+            if (mouseBoundsData.inBounds.y)
+            {
+                this.horizontalRuler.setOpacity(1);
+                this.horizontalRuler.setPosition(relativePositionFromParent);                
+            } else 
+            {
+                this.horizontalRuler.setOpacity(0);
+                
+            }
         } else 
         {
             this.verticalSliceGuideLine.setOpacity(0);
+            this.horizontalRuler.setOpacity(0);
         }
     }
     
     showCircleGuideLine(mousePos)
     {
         //* Compute Relative Position of mouse to Page        
-        this.circleGuideLine.setXYPosition(mousePos.x - this.x, mousePos.y - this.y);
+        this.circleGuideLine.setXYPosition(mousePos.x, mousePos.y);
         this.circleGuideLine.setOpacity(1);
+        
+        let maxZIndex = this.group.children.length - 1;
+        this.circleGuideLine.group.zIndex(maxZIndex);
+        
+        let log = console.log;
+        
+        log('MaxZIndex ' + maxZIndex);
+        log(mousePos);
+    }
 
+    getRelativePositionUnscaled(mousePos)
+    {
+        //Compute Relative Position of mouse to Page
+        let relativePosition = {
+            x: mousePos.x - this.x,
+            y: mousePos.y - this.y,
+        };
+        //Get Ratio
+        let relativeRatio = {
+            x: relativePosition.x / this.width,
+            y: relativePosition.y / this.height
+        }
+        let relativePositionUnscaled = {
+            x: this.origWidth * relativeRatio.x,
+            y: this.origHeight * relativeRatio.y,
+        }
+
+        return relativePositionUnscaled;
+    }
+
+    getMouseBoundsData(mousePos)
+    {
+        let topYBounds = this.y > mousePos.y + this.y;
+        let bottomYBounds = this.y + this.height <= mousePos.y + this.y;
+        let inYBounds = !(topYBounds || bottomYBounds);
+        let onTopHalf = this.y + (this.height/2) > mousePos.y + this.y;
+        let onLeftHalf =  this.x + (this.width/2) > mousePos.x
+
+        let rightXBounds = this.x > mousePos.x + this.x;
+        let leftXBounds = this.x + this.width < mousePos.x + this.x;
+        let inXBounds = !(rightXBounds || leftXBounds);
+
+        let mouseBoundsData = {
+            topBounds: {
+                x: rightXBounds,
+                y: topYBounds
+            },
+            bottomBounds: {
+                x: leftXBounds,
+                y: bottomYBounds
+            },
+            inBounds: {
+                x: inXBounds,
+                y: inYBounds
+            },
+            halfBounds: {
+                top: onTopHalf,
+                left: onLeftHalf
+            }
+        };
+        return mouseBoundsData;
+    }
+
+    setGradientOpacity(newOpacity)
+    {
+        for (let gradient of this.gradient)
+        {
+            gradient.setOpacity(newOpacity);    
+        }
+    }
+
+    setFillColor(newColor)
+    {
+        this.pageShape.setAttrs({
+            fill: newColor
+        })
+    }
+
+    setOpacity(newOpacity)
+    {
+        this.group.setOpacity(newOpacity);
     }
 }   
