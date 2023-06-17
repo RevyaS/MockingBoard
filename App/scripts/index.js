@@ -53,7 +53,6 @@ function konvaSetup()
     mainLayer.layer.on(PAGEEVENTS.MOUSEEXITED, () => {
         debugSquare.removeCurrentPage();
     })
-    // debugSquare.setOpacity(0);
 
     stage.on(STAGEEVENTS.LEFTMOUSECLICKED, () => {
         mainLayer.onMouseClicked();
