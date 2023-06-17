@@ -16,6 +16,7 @@ class Page
         this.gradientOutlineAmount = 6;
         this.gradientWidth = 30;
         this.gradient = [];
+        this.state = APPSTATE.DEFAULT;
         let group = new Konva.Group({
             x: x,
             y: y,
@@ -97,6 +98,7 @@ class Page
 
     setState(newState)
     {
+        this.state = newState;
         switch (newState)
         {
             case APPSTATE.DEFAULT:
@@ -131,6 +133,7 @@ class Page
             this.setGradientOpacity(1);
             this.zIndex = this.group.parent.children.length - 1;
             this.group.zIndex(this.zIndex);
+            
             this.group.fire(PAGEEVENTS.MOUSEENTERED, this);
         }
     }
@@ -139,11 +142,16 @@ class Page
     {
         if (this.mouseEntered)
         {
-            // this.group.fire(PAGEEVENTS.MOUSEEXITED);
             this.mouseEntered = false;
             this.setGradientOpacity(0);
             this.zIndex = this.layerIndex;
             this.group.zIndex(this.zIndex);
+            //Hide guidelines
+            this.horizontalSliceGuideLine.setOpacity(0);
+            this.verticalSliceGuideLine.setOpacity(0);
+            this.horizontalRuler.setOpacity(0);
+            this.verticalRuler.setOpacity(0);
+            this.group.fire(PAGEEVENTS.MOUSEEXITED);
         }
     }
 
@@ -152,6 +160,10 @@ class Page
         let relativeMouse = this.group.getRelativePointerPosition();
         let relativePositionUnscaled = this.getRelativePositionUnscaled(relativeMouse);
         let mouseBoundsData = this.getMouseBoundsData(relativeMouse);
+        let relativePositionFromParent = {
+            x: relativePositionUnscaled.x + this.x,
+            y: relativePositionUnscaled.y + this.y
+        };
 
         //Set Ruler position
         this.verticalRuler.setLeftOffset(!mouseBoundsData.halfBounds.left);
@@ -160,13 +172,14 @@ class Page
         if (mouseBoundsData.inBounds.y)
         {
             this.horizontalSliceGuideLine.setOpacity(1);
-            this.horizontalSliceGuideLine.setYPosition(relativePositionUnscaled.y)       
+            console.log('show y: ', this.y);
+            this.horizontalSliceGuideLine.setYPosition(relativePositionFromParent.y)       
         
             //Show ruler
             if (mouseBoundsData.inBounds.x)
             {
                 this.verticalRuler.setOpacity(1);
-                this.verticalRuler.setPosition(relativePositionUnscaled);                
+                this.verticalRuler.setPosition(relativePositionFromParent);                
             } else 
             {
                 this.verticalRuler.setOpacity(0);
@@ -183,7 +196,10 @@ class Page
         let relativeMouse = this.group.getRelativePointerPosition();
         let relativePositionUnscaled = this.getRelativePositionUnscaled(relativeMouse);
         let mouseBoundsData = this.getMouseBoundsData(relativeMouse);
-
+        let relativePositionFromParent = {
+            x: relativePositionUnscaled.x + this.x,
+            y: relativePositionUnscaled.y + this.y
+        };
         //Set Ruler position
         this.horizontalRuler.setBottomOffset(!mouseBoundsData.halfBounds.top);
 
@@ -191,13 +207,13 @@ class Page
         if (mouseBoundsData.inBounds.x)
         {
             this.verticalSliceGuideLine.setOpacity(1);
-            this.verticalSliceGuideLine.setXPosition(relativePositionUnscaled.x)
+            this.verticalSliceGuideLine.setXPosition(relativePositionFromParent.x)
         
             //Show ruler
             if (mouseBoundsData.inBounds.y)
             {
                 this.horizontalRuler.setOpacity(1);
-                this.horizontalRuler.setPosition(relativePositionUnscaled);                
+                this.horizontalRuler.setPosition(relativePositionFromParent);                
             } else 
             {
                 this.horizontalRuler.setOpacity(0);

@@ -55,7 +55,7 @@ function konvaSetup()
     })
     // debugSquare.setOpacity(0);
 
-    stage.on(STAGEEVENTS.MOUSECLICKED, () => {
+    stage.on(STAGEEVENTS.LEFTMOUSECLICKED, () => {
         mainLayer.onMouseClicked();
     });
 
@@ -85,8 +85,12 @@ function eventSetup()
         stage.fire(STAGEEVENTS.MOUSEMOVED);
     });
 
-    stage.on('pointerclick', function () {
-        stage.fire(STAGEEVENTS.MOUSECLICKED);
+    stage.on('pointerclick', function (e) {
+        console.log('Pointer click triggered', e);
+        if (e.evt.button == 0)
+        {
+            stage.fire(STAGEEVENTS.LEFTMOUSECLICKED);
+        }
     });
 
     stage.on('wheel', function (evt) {

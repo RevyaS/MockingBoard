@@ -50,7 +50,7 @@ class MainLayer
     {
         this.selectedPage = page;
         this.layer.fire(PAGEEVENTS.MOUSEENTERED, page);
-        console.log('mouse entered page', this.layers);
+        console.log('mouse entered page', this.outerLayer);
     }
 
     onPageMouseExited()
@@ -62,7 +62,10 @@ class MainLayer
     onStateChanged(newState)
     {
         this.state = newState;
-        this.page.setState(newState);
+        for (let currPage of this.outerLayer)
+        {
+            currPage.setState(newState);            
+        }
     }
 
     onMouseMove()
@@ -78,16 +81,20 @@ class MainLayer
 
         for (let page of this.outerLayer)
         {
-            page.onMouseMove();
-            switch (this.state)
-            {
-                case APPSTATE.HORIZONTALSLICE:
-                    page.showHorizontalSliceGuideLine();
-                    break;
-                case APPSTATE.VERTICALSLICE:
-                    page.showVerticalSliceGuideLine();
-                    break;
-            }            
+            page.onMouseMove();        
+        }
+
+        
+        // console.log('selectedPage null? ', this.selectedPage);
+        if (this.selectedPage == null) return;
+        switch (this.state)
+        {
+            case APPSTATE.HORIZONTALSLICE:
+                this.selectedPage.showHorizontalSliceGuideLine();
+                break;
+            case APPSTATE.VERTICALSLICE:
+                this.selectedPage.showVerticalSliceGuideLine();
+                break;
         }
     }
 
@@ -149,7 +156,10 @@ class MainLayer
         //Find Division
         let relativePos = this.getRelativePositionUnscaled(pos);
         if (this.selectedPage == null) return;
-        this.sliceVertically(relativePos);
+        if (this.state == APPSTATE.HORIZONTALSLICE)
+        {
+            this.sliceVertically(relativePos);
+        }
 
     }
 
@@ -158,11 +168,13 @@ class MainLayer
         let layerPages = [];
         let parentPage = this.selectedPage;
         this.removeElementByValue(this.outerLayer, this.selectedPage);
+        console.log('selected page exit');
         this.selectedPage.mouseExit();
+        this.selectedPage.setState(APPSTATE.DEFAULT);
         this.currentLayer++;
 
         console.log('outer layer test', this.outerLayer);
-        console.log('mouse Pos test, ', mousePos);
+        // console.log('mouse Pos test, ', mousePos);
         //Create top position based on selected page
         let height = Math.floor(mousePos.y - parentPage.y);
         let topPage = new Page(parentPage.x,
@@ -178,7 +190,7 @@ class MainLayer
             mainLayerRef.onPageMouseEntered(page);
         });
 
-
+        //Create bottom position layer
         let remainingHeight = parentPage.origHeight - height;
         let bottomPage = new Page(parentPage.x,
             height + parentPage.y,
