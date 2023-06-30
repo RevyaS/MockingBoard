@@ -166,7 +166,9 @@ class MainLayer
             case APPSTATE.VERTICALSLICE:
                 this.sliceHorizontally(relativePos);
                 break;
-            
+            case APPSTATE.CIRCLE:
+                this.generateCircle(relativePos);
+                break;
         }
         
         
@@ -314,4 +316,33 @@ class MainLayer
           }
         }
       }
+      
+    generateCircle(relativePos){
+        console.log('Generate Circle');
+        
+        let circle = new Konva.Circle({
+            x: 350,
+            y: 90,
+            fill: "green",
+            radius: 50,
+            draggable: true,
+            
+        });
+        
+        
+        
+        let maxZIndex = this.selectedPage.group.children.length - 1;
+        // this.circleGuideLine.group.zIndex(maxZIndex);
+        
+        // Set the position of the circle
+        circle.x(relativePos.x); // Set the x-coordinate to 500
+        circle.y(relativePos.y); // Set the y-coordinate to 200
+
+        // Redraw the stage to reflect the updated position
+        // circle.getLayer().batchDraw();
+        this.selectedPage.mouseExit();
+        this.selectedPage.setState(APPSTATE.DEFAULT);
+        
+        this.selectedPage.group.add(circle);
+    }
 }

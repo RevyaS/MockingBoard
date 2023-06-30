@@ -237,11 +237,6 @@ class Page
         
         let maxZIndex = this.group.children.length - 1;
         this.circleGuideLine.group.zIndex(maxZIndex);
-        
-        let log = console.log;
-        
-        log('MaxZIndex ' + maxZIndex);
-        log(mousePos);
     }
 
     getRelativePositionUnscaled(mousePos)
