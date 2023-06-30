@@ -9,10 +9,10 @@ App for Mocking Apps and Websites from High Level to Low Level View
 ### 2. Divide pages by slice tool
 ![](https://github.com/RevyaS/MockingBoard/blob/main/Documents/Slice.gif)
 
-- [ ] Part of Toolbar on top
-- [ ] Slice page horizontally or vertically
+- [x] Part of Toolbar on top
+- [x] Slice page horizontally or vertically
 - [ ] Can specify measurement and measurement type (percentage from parent div/static size)
-- [ ] Measurement guides/rulers
+- [x] Measurement guides/rulers
 - [ ] Editable measurements
 
 ### 3. Add components on page divisions

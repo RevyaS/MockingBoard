@@ -1,0 +1,4 @@
+const PAGEEVENTS = Object.freeze({
+    MOUSEENTERED: "MOUSEENTERED",
+    MOUSEEXITED: "MOUSEEXITED",
+})
