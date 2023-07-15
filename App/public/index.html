@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Web site created using create-snowpack-app" />
+    <!-- CSS -->
+    <link src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" rel="stylesheet"></link>
+
+    <link rel="stylesheet" type="text/css" href="styles/index.css" />
+    <title>MockingBoard</title>
+  </head>
+  
+  <body>
+    
+    <script type="module" src="/dist/index.js"></script>
+    
+    
+    <div class="flex-column d-flex h-100 w-100">
+      <!-- Toolbar -->
+      <div class="row w-100 ps-4 m-0 gap-2" id="toolbar">
+        <button class="toolbar-btn-image" id="horizontalSliceTool">
+          <img class="h-75" src="\assets\icons\toolbar-slice.png" />
+        </button>
+        <button class="toolbar-btn-image" id="verticalSliceTool">
+          <img
+            class="h-75 rotate90"
+            src="\assets\icons\toolbar-slice.png"
+          />
+        </button>
+      </div>
+
+      <style>
+        #itemList {
+          text-align: center;
+          width: 200px; /* Set the desired width  */
+        }
+      </style>
+
+      <div class="flex-grow-1" id="bodyContainer">
+        <!-- Canvas -->
+        <div id="canvasContainer"></div>
+
+        <!-- Component List (On Top Of Canvas) -->
+        <div class="h-100 row" id="componentList">
+          <div id="itemList">
+            
+            <style>
+              .custom-button {
+                width: 185px;
+                color: #ffffff;
+                background-color: #000000;
+                display: flex;
+                align-items: center;
+                margin-bottom: 5px;
+              }
+              .custom-button img {
+                filter: brightness(0) invert(1); /* Invert image color to white */
+              }
+              .custom-button span {
+                flex-grow: 1;
+                text-align: center;
+              }
+            </style>
+            
+            <button
+              id="circleGenerate""
+              class="btn btn-primary custom-button"
+              style="width: 185px;"
+            >
+              <img
+                src="/assets/icons/toolbar-slice.png"
+                alt="Icon"
+                class="mr-2"
+              />
+              <span>Circle</span>
+            </button>
+            
+            
+            <!-- Add more buttons here -->
+          </div>
+          <button
+            class="h-100"
+            id="componentListToggle"
+            onclick="toggleComponentList()"
+          >
+            &gt;
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
