@@ -120,11 +120,11 @@ export class MainLayer {
     //* Reposition
     let newScale = this.group.scale();
     let scalarOffset = currentScale.x - newScale.x;
-
     let offset = {
-      x: zoomCenter.x * scalarOffset,
-      y: zoomCenter.y * scalarOffset,
+      x: Math.floor(zoomCenter.x) * scalarOffset,
+      y: Math.floor(zoomCenter.y) * scalarOffset,
     };
+
 
     let currPosition = this.group.getPosition();
     let newPosition = {
@@ -140,10 +140,7 @@ export class MainLayer {
       y: this.y,
     };
 
-    console.log("newGroupPos: ", newGroupPos);
-    this.group.setAttr("scale", newGroupPos);
-
-    console.log("test layer");
+    this.group.setAbsolutePosition(newGroupPos);
   }
 
   scaleBy(scaleRatio: number) {
