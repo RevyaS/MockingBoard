@@ -267,7 +267,7 @@ export class DebuggingSquare {
   //Event Functions
   onMouseMove() {
     let pos = this.layer.getRelativePointerPosition();
-    this.mouse.setText('mouse: (' + pos.x + ',' + pos.y + ')');
+    this.mouse.setText('mouse: (' + Math.floor(pos.x) + ',' + Math.floor(pos.y) + ')');
   }
 
   onPageScale() {
@@ -370,5 +370,3 @@ export class DebuggingSquare {
     }
   }
 }
-
-export default DebuggingSquare
