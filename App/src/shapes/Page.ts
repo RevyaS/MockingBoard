@@ -88,9 +88,8 @@ class Page {
     group.add(this.pageShape);
 
     let horizontalSliceGuideLine = new HorizontalSlideGuide(0, 0, this.width);
-
     group.add(horizontalSliceGuideLine.group);
-
+    horizontalSliceGuideLine.setOpacity(0);
     this.horizontalSliceGuideLine = horizontalSliceGuideLine;
 
     let verticalRuler = new VerticalRuler(0, 0, 100, this.height, true);
@@ -276,7 +275,7 @@ class Page {
     return relativePositionUnscaled;
   }
 
-  getMouseBoundsData(mousePos: {x: number, y: number}) {
+  getMouseBoundsData(mousePos: { x: number, y: number }) {
     let topYBounds = this.y > mousePos.y + this.y;
     let bottomYBounds = this.y + this.height <= mousePos.y + this.y;
     let inYBounds = !(topYBounds || bottomYBounds);
