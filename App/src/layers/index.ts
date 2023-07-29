@@ -1,3 +1,4 @@
-import MainLayer from "./MainLayer";
+import MainLayer from './MainLayer';
+import DebuggingSquare from './DebugSquare';
 
-export default MainLayer
+export default { MainLayer, DebuggingSquare };

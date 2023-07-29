@@ -66,11 +66,11 @@ body
     display: flex;
     align-items: center;
     margin-bottom: 5px;
-}
-.custom-button img {
+  }
+  .custom-button img {
     filter: brightness(0) invert(1); /* Invert image color to white */
-}
-.custom-button span {
+  }
+  .custom-button span {
     flex-grow: 1;
     text-align: center;
-}
+  }
