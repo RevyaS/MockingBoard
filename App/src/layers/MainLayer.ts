@@ -4,7 +4,7 @@ import Page from '../shapes/Page';
 import PAGEEVENTS from '../states/PageEvents';
 import { Layer } from 'konva/lib/Layer';
 
-class MainLayer {
+export class MainLayer {
   //* Just type public in this fields if u want to make it public
   x = 240;
   y = 60;
@@ -19,7 +19,7 @@ class MainLayer {
   height: any;
   layer: Layer;
   currentLayer = 0;
-  group: any;
+  group: Konva.Group;
   page: Page;
 
   public getScale: any;
@@ -114,12 +114,11 @@ class MainLayer {
     //* Update Scale
     let zoomAmount = 1.0 + (10.0 / deltaY) * -1;
     let zoomCenter = this.layer.getRelativePointerPosition();
-    let currentScale = this.group.getScale();
-
+    let currentScale = this.group.scale();
     this.scaleBy(zoomAmount);
 
     //* Reposition
-    let newScale = this.group.getScale();
+    let newScale = this.group.scale();
     let scalarOffset = currentScale.x - newScale.x;
 
     let offset = {
@@ -141,7 +140,10 @@ class MainLayer {
       y: this.y,
     };
 
-    this.group.setAttr(newGroupPos);
+    console.log("newGroupPos: ", newGroupPos);
+    this.group.setAttr("scale", newGroupPos);
+
+    console.log("test layer");
   }
 
   scaleBy(scaleRatio: number) {

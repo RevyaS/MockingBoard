@@ -2,7 +2,8 @@ import Konva from 'konva';
 import $ from 'jquery';
 import APPSTATE from './states/AppState';
 import PAGEEVENTS from './states/PageEvents';
-import Layers from './layers';
+import { MainLayer } from './layers/MainLayer';
+import { DebuggingSquare } from './layers/DebuggingSquare';
 import STAGEEVENTS from './states/StageEvents';
 import { Stage } from 'konva/lib/Stage';
 
@@ -33,7 +34,7 @@ $(() => {
   itemList = $('#itemList');
   componentListToggle = $('#componentListToggle');
   componentListToggle.click(toggleComponentList);
-  
+
   bodyContainer = $('#bodyContainer');
   html = $('html');
 
@@ -41,8 +42,7 @@ $(() => {
   itemList.hide();
 
   konvaSetup();
-  
-  eventSetup()
+  eventSetup();
 });
 
 function konvaSetup() {
@@ -53,8 +53,8 @@ function konvaSetup() {
   });
 
   //DEBUG Items
-  let mainLayer = new Layers.MainLayer();
-  let debugSquare = new Layers.DebuggingSquare(25, 0, mainLayer);
+  let mainLayer = new MainLayer();
+  let debugSquare = new DebuggingSquare(25, 0, mainLayer);
 
   mainLayer.layer.on(PAGEEVENTS.MOUSEENTERED, (page) => {
     debugSquare.setCurrentPage(page);
@@ -89,7 +89,7 @@ function konvaSetup() {
 }
 
 function eventSetup() {
-  stage.on('mousemove', function () {
+  stage.on('mousemove', () => {
     stage.fire(STAGEEVENTS.MOUSEMOVED);
   });
 
@@ -99,7 +99,7 @@ function eventSetup() {
     }
   });
 
-  stage.on('wheel', function (evt) {
+  stage.on('wheel', (evt) => {
     stage.fire(STAGEEVENTS.MOUSEWHEEL, evt);
   });
 

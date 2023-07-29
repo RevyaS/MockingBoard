@@ -1,7 +1,7 @@
 import Konva from 'konva';
 import MainLayer from './MainLayer';
 
-class DebuggingSquare {
+export class DebuggingSquare {
   width: number;
   height: number;
   stroke: string;
@@ -276,34 +276,34 @@ class DebuggingSquare {
     );
     this.layerSize.setText(
       'layerPageSize: (' +
-        this.mainLayer.width +
-        ',' +
-        this.mainLayer.height +
-        ')',
+      this.mainLayer.width +
+      ',' +
+      this.mainLayer.height +
+      ')',
     );
     this.layerBounds00.setText(
       'layerPage00: (' + this.mainLayer.x + ',' + this.mainLayer.y + ')',
     );
     this.layerBounds01.setText(
       'layerPage01: (' +
-        this.mainLayer.x +
-        ',' +
-        (this.mainLayer.y + this.mainLayer.height) +
-        ')',
+      this.mainLayer.x +
+      ',' +
+      (this.mainLayer.y + this.mainLayer.height) +
+      ')',
     );
     this.layerBounds10.setText(
       'layerPage10: (' +
-        (this.mainLayer.x + this.mainLayer.width) +
-        ',' +
-        this.mainLayer.y +
-        ')',
+      (this.mainLayer.x + this.mainLayer.width) +
+      ',' +
+      this.mainLayer.y +
+      ')',
     );
     this.layerBounds11.setText(
       'layerPage11: (' +
-        (this.mainLayer.x + this.mainLayer.width) +
-        ',' +
-        (this.mainLayer.y + this.mainLayer.height) +
-        ')',
+      (this.mainLayer.x + this.mainLayer.width) +
+      ',' +
+      (this.mainLayer.y + this.mainLayer.height) +
+      ')',
     );
   }
 
