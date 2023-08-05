@@ -1,0 +1,6 @@
+const PAGEEVENTS = Object.freeze({
+  MOUSEENTERED: "MOUSEENTERED",
+  MOUSEEXITED: "MOUSEEXITED",
+})
+
+export default PAGEEVENTS
