@@ -2,7 +2,7 @@ import Konva from 'konva';
 import APPSTATE from '../states/AppState';
 import { Rect } from 'konva/lib/shapes/Rect';
 import { Group } from 'konva/lib/Group';
-import HorizontalSlideGuide from './HorizontalSlizeGuide';
+import HorizontalSlideGuide from './HorizontalSliceGuide';
 import VerticalRuler from '../ruler/VerticalRuler';
 import VerticalSliceGuide from './VerticalSliceGuide';
 import HorizontalRuler from '../ruler/HorizontalRuler';
