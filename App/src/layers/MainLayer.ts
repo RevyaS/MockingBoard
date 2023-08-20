@@ -14,7 +14,7 @@ export class MainLayer {
   outerLayer = <any>[];
 
   state: string;
-  selectedPage: any;
+  selectedPage: Page | null; //* will allow null
   width: number;
   height: any;
   layer: Layer;
@@ -25,6 +25,7 @@ export class MainLayer {
   public getScale: any;
 
   constructor() {
+    this.selectedPage = null
     this.state = APPSTATE.DEFAULT;
 
     const layer = new Konva.Layer();
@@ -66,7 +67,8 @@ export class MainLayer {
   }
 
   onPageMouseExited() {
-    this.selectedPage = null;
+    // this.selectedPage = null;
+    this.selectedPage = null
     this.layer.fire(PAGEEVENTS.MOUSEEXITED);
   }
 
@@ -105,7 +107,7 @@ export class MainLayer {
         this.selectedPage.showVerticalSliceGuideLine();
         break;
       case APPSTATE.CIRCLE:
-        this.selectedPage.showCircleGuideLine(relativeMouseFromSelectedPage);
+        this.selectedPage.showComponentGuideLine(relativeMouseFromSelectedPage);
         break;
     }
   }
@@ -184,10 +186,16 @@ export class MainLayer {
     let layerPages = <any>[];
     let parentPage = this.selectedPage;
     this.removeElementByValue(this.outerLayer, this.selectedPage);
+    
+    if(!this.selectedPage)
+      return
     this.selectedPage.mouseExit();
     this.selectedPage.setState(APPSTATE.DEFAULT);
     this.currentLayer++;
-
+    
+    if(!parentPage)
+      return
+    
     //* Create top position based on selected page
     let height = Math.floor(mousePos.y - parentPage.y);
     let topPage = new Page(
@@ -236,10 +244,15 @@ export class MainLayer {
     let layerPages = <any>[];
     let parentPage = this.selectedPage;
     this.removeElementByValue(this.outerLayer, this.selectedPage);
-
+    
+    if(!this.selectedPage)
+      return
     this.selectedPage.mouseExit();
     this.currentLayer++;
-
+    
+    if(!parentPage)
+      return
+    
     //* Create left position based on selected page
     let width = Math.floor(mousePos.x - parentPage.x);
     let leftPage = new Page(
@@ -342,6 +355,7 @@ export class MainLayer {
   }
 
   generateCircle(relativePos: any) {
+    
     let circle = new Konva.Circle({
       x: 350,
       y: 90,
@@ -349,8 +363,11 @@ export class MainLayer {
       radius: 50,
       draggable: true,
     });
-
-    let maxZIndex = this.selectedPage.group.children.length - 1;
+    
+    if(!this.selectedPage)
+      return
+    
+    // let maxZIndex = this.selectedPage.group.children?.length - 1
 
     //* set the position of the circle
     circle.x(relativePos.x);

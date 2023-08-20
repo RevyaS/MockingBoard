@@ -245,15 +245,24 @@ class Page {
     }
   }
 
-  showCircleGuideLine(mousePos: { x: number; y: number }) {
+  showComponentGuideLine(mousePos: { x: number; y: number }) {
     //* Compute Relative Position of mouse to Page
-    this.circleGuideLine.setXYPosition(mousePos.x, mousePos.y);
-    this.circleGuideLine.setOpacity(1);
-
-    if (this.group && this.group.children) {
-      let maxZIndex = this.group.children.length - 1;
-      this.circleGuideLine.group.zIndex(maxZIndex);
+    let relativeMouse = this.group.getRelativePointerPosition()
+    let relativePositionUnscaled = this.getRelativePositionUnscaled(relativeMouse)
+    let mouseBoundData = this.getMouseBoundsData(relativeMouse)
+    let relativePositionFromParent = {
+      x: relativePositionUnscaled.x + this.x,
+      y: relativePositionUnscaled.y + this.y
     }
+    
+    this.circleGuideLine.setPosition(relativePositionFromParent)
+    this.circleGuideLine.setOpacity(1)
+    
+    // if (this.group && this.group.children) {
+    //   let maxZIndex = this.group.children.length - 1;
+    //   this.circleGuideLine.group.zIndex(maxZIndex);
+    // }
+    
   }
 
   getRelativePositionUnscaled(mousePos: { x: number; y: number }) {

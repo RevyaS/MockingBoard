@@ -50,7 +50,9 @@ class CircleGuide {
     return pos;
   }
 
-  setXYPosition(x: number, y: number) {
+  setPosition(relativeMousePos: {x: number, y: number}) {
+    const { x, y } = relativeMousePos
+    
     this.x = Math.floor(x);
     this.y = Math.floor(y);
     this.group.setAttrs({
