@@ -119,7 +119,11 @@ export class MainLayer {
 
     //* Reposition
     let newScale = this.group.scale();
-    let scalarOffset = currentScale.x - newScale.x;
+    
+    console.log('newScale:', newScale)
+    console.log('currentScale:', currentScale)
+    
+    let scalarOffset = (currentScale && newScale) ? (currentScale.x - newScale.x) : 0;
     let offset = {
       x: Math.floor(zoomCenter.x) * scalarOffset,
       y: Math.floor(zoomCenter.y) * scalarOffset,
