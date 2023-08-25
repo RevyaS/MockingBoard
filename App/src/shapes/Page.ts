@@ -245,11 +245,11 @@ class Page {
     }
   }
 
-  showComponentGuideLine(mousePos: { x: number; y: number }) {
+  showCircleGuideShape() {
     //* Compute Relative Position of mouse to Page
     let relativeMouse = this.group.getRelativePointerPosition()
     let relativePositionUnscaled = this.getRelativePositionUnscaled(relativeMouse)
-    let mouseBoundData = this.getMouseBoundsData(relativeMouse)
+    // let mouseBoundData = this.getMouseBoundsData(relativeMouse)
     let relativePositionFromParent = {
       x: relativePositionUnscaled.x + this.x,
       y: relativePositionUnscaled.y + this.y
@@ -257,7 +257,6 @@ class Page {
     
     this.circleGuideLine.setPosition(relativePositionFromParent)
     this.circleGuideLine.setOpacity(1)
-    
     // if (this.group && this.group.children) {
     //   let maxZIndex = this.group.children.length - 1;
     //   this.circleGuideLine.group.zIndex(maxZIndex);

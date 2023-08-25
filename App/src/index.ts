@@ -114,7 +114,10 @@ function eventSetup() {
   });
 
   circleGenerateButton.on('click', function () {
-    handleComponentButtonClick('0');
+    appState = APPSTATE.CIRCLE
+    
+    console.log(appState)
+    stage.fire(STAGEEVENTS.APPSTATECHANGED)
   });
 
   //Right click on app

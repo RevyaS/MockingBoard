@@ -93,12 +93,7 @@ export class MainLayer {
     }
 
     if (this.selectedPage == null) return;
-
-    let relativeMouseFromSelectedPage = {
-      x: relativeMouse.x - this.selectedPage.x,
-      y: relativeMouse.y - this.selectedPage.y,
-    };
-
+    
     switch (this.state) {
       case APPSTATE.HORIZONTALSLICE:
         this.selectedPage.showHorizontalSliceGuideLine();
@@ -107,7 +102,7 @@ export class MainLayer {
         this.selectedPage.showVerticalSliceGuideLine();
         break;
       case APPSTATE.CIRCLE:
-        this.selectedPage.showComponentGuideLine(relativeMouseFromSelectedPage);
+        this.selectedPage.showCircleGuideShape()
         break;
     }
   }
@@ -162,7 +157,8 @@ export class MainLayer {
     this.height = Math.floor(this.origHeight * scaleX);
     this.group.scale(newScale);
   }
-
+  
+  //* this is where u generate your shapes/comnponents/lines
   onMouseClicked() {
     let pos = this.layer.getRelativePointerPosition();
 
@@ -178,6 +174,7 @@ export class MainLayer {
         this.sliceHorizontally(relativePos);
         break;
       case APPSTATE.CIRCLE:
+        this.generateCircle(relativePos)
         break;
     }
   }
