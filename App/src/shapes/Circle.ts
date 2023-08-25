@@ -5,14 +5,14 @@ class Circle extends BaseComponent{
   offset: number
   strokeWidth: number
   
-  constructor(x: number, y: number) {
-    super(x, y);
+  constructor() {
+    super(0, 0);
     this.offset = 30;
     this.strokeWidth = 3;
     
     let circle = new Konva.Circle({
-      x: 350,
-      y: 90,
+      x: 0,
+      y: 0,
       fill: 'green',
       radius: 50,
       draggable: true,

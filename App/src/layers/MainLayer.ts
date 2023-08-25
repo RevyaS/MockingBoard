@@ -3,6 +3,7 @@ import APPSTATE from '../states/AppState';
 import Page from '../shapes/Page';
 import PAGEEVENTS from '../states/PageEvents';
 import { Layer } from 'konva/lib/Layer';
+import Circle from '../shapes/Circle';
 
 export class MainLayer {
   //* Just type public in this fields if u want to make it public
@@ -25,7 +26,7 @@ export class MainLayer {
   public getScale: any;
 
   constructor() {
-    this.selectedPage = null
+    this.selectedPage = null;
     this.state = APPSTATE.DEFAULT;
 
     const layer = new Konva.Layer();
@@ -68,7 +69,7 @@ export class MainLayer {
 
   onPageMouseExited() {
     // this.selectedPage = null;
-    this.selectedPage = null
+    this.selectedPage = null;
     this.layer.fire(PAGEEVENTS.MOUSEEXITED);
   }
 
@@ -93,7 +94,7 @@ export class MainLayer {
     }
 
     if (this.selectedPage == null) return;
-    
+
     switch (this.state) {
       case APPSTATE.HORIZONTALSLICE:
         this.selectedPage.showHorizontalSliceGuideLine();
@@ -102,7 +103,7 @@ export class MainLayer {
         this.selectedPage.showVerticalSliceGuideLine();
         break;
       case APPSTATE.CIRCLE:
-        this.selectedPage.showCircleGuideShape()
+        this.selectedPage.showCircleGuideShape();
         break;
     }
   }
@@ -116,16 +117,16 @@ export class MainLayer {
 
     //* Reposition
     let newScale = this.group.scale();
-    
-    console.log('newScale:', newScale)
-    console.log('currentScale:', currentScale)
-    
-    let scalarOffset = (currentScale && newScale) ? (currentScale.x - newScale.x) : 0;
+
+    console.log('newScale:', newScale);
+    console.log('currentScale:', currentScale);
+
+    let scalarOffset =
+      currentScale && newScale ? currentScale.x - newScale.x : 0;
     let offset = {
       x: Math.floor(zoomCenter.x) * scalarOffset,
       y: Math.floor(zoomCenter.y) * scalarOffset,
     };
-
 
     let currPosition = this.group.getPosition();
     let newPosition = {
@@ -157,7 +158,7 @@ export class MainLayer {
     this.height = Math.floor(this.origHeight * scaleX);
     this.group.scale(newScale);
   }
-  
+
   //* this is where u generate your shapes/comnponents/lines
   onMouseClicked() {
     let pos = this.layer.getRelativePointerPosition();
@@ -174,7 +175,7 @@ export class MainLayer {
         this.sliceHorizontally(relativePos);
         break;
       case APPSTATE.CIRCLE:
-        this.generateCircle(relativePos)
+        this.generateCircle(relativePos);
         break;
     }
   }
@@ -183,16 +184,14 @@ export class MainLayer {
     let layerPages = <any>[];
     let parentPage = this.selectedPage;
     this.removeElementByValue(this.outerLayer, this.selectedPage);
-    
-    if(!this.selectedPage)
-      return
+
+    if (!this.selectedPage) return;
     this.selectedPage.mouseExit();
     this.selectedPage.setState(APPSTATE.DEFAULT);
     this.currentLayer++;
-    
-    if(!parentPage)
-      return
-    
+
+    if (!parentPage) return;
+
     //* Create top position based on selected page
     let height = Math.floor(mousePos.y - parentPage.y);
     let topPage = new Page(
@@ -241,15 +240,13 @@ export class MainLayer {
     let layerPages = <any>[];
     let parentPage = this.selectedPage;
     this.removeElementByValue(this.outerLayer, this.selectedPage);
-    
-    if(!this.selectedPage)
-      return
+
+    if (!this.selectedPage) return;
     this.selectedPage.mouseExit();
     this.currentLayer++;
-    
-    if(!parentPage)
-      return
-    
+
+    if (!parentPage) return;
+
     //* Create left position based on selected page
     let width = Math.floor(mousePos.x - parentPage.x);
     let leftPage = new Page(
@@ -352,28 +349,16 @@ export class MainLayer {
   }
 
   generateCircle(relativePos: any) {
-    
-    let circle = new Konva.Circle({
-      x: 350,
-      y: 90,
-      fill: 'green',
-      radius: 50,
-      draggable: true,
-    });
-    
-    if(!this.selectedPage)
-      return
-    
-    // let maxZIndex = this.selectedPage.group.children?.length - 1
+    if (!this.selectedPage) return;
 
+    let circle = new Circle();
     //* set the position of the circle
-    circle.x(relativePos.x);
-    circle.y(relativePos.y);
+    circle.setPosition(relativePos);
 
     this.selectedPage.mouseExit();
     this.selectedPage.setState(APPSTATE.DEFAULT);
 
-    this.selectedPage.group.add(circle);
+    this.selectedPage.group.add(circle.group);
   }
 }
 
