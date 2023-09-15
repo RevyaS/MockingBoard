@@ -70,3 +70,56 @@ body {
     flex-grow: 1;
     text-align: center;
 }
+
+#propertyPLBTn
+{
+    background-color: #2E2E2E;
+    color: white;
+    width: 35px; 
+    height: 100%;
+    position: absolute;
+    
+}
+#propertyPanel
+{
+    margin-top: -1080px;
+    margin-right: 35px;
+    text-align: right;
+}
+#propertylist
+{
+    background-color: #363636;
+    color: white;
+    width: 500px;
+    height: 100%;
+    position: absolute;
+    text-align: right;
+    margin: 0;
+    top: 50%;
+    left: 99%;
+    margin-right: 50%;
+    transform: translate(-50%, -50%) 
+}
+
+#myDIV {
+    height: 250px;
+    width: 250px;
+    overflow: auto;
+  }
+  
+  #content {
+    height: 800px;
+    width: 2000px;
+    background-color: coral;
+  }
+
+  #saveBtn
+  {
+    background-color: #363636;
+    color: white;
+    position: relative;
+    height: 50px;
+    width: 100px;
+    text-align: center;
+    margin-left: auto;
+  }
