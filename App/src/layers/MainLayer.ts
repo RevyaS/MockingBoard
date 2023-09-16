@@ -21,12 +21,13 @@ export class MainLayer {
   currentLayer = 0;
   group: Konva.Group;
   page: Page;
+  layerCtr: number;
 
   public getScale: any;
 
   constructor() {
     this.state = APPSTATE.DEFAULT;
-
+    this.layerCtr = 1;
     const layer = new Konva.Layer();
     this.width = this.origWidth;
     this.height = this.origHeight;
@@ -198,8 +199,9 @@ export class MainLayer {
     layerPages.push(topPage);
 
     this.outerLayer.push(topPage);
-
+    this.layerCtr++;
     let mainLayerRef = this;
+    topPage.PanelName = "Panel"+ this.layerCtr;
     topPage.group.on(PAGEEVENTS.MOUSEENTERED, (page) => {
       mainLayerRef.onPageMouseEntered(page);
     });
@@ -224,8 +226,12 @@ export class MainLayer {
     bottomPage.group.on(PAGEEVENTS.MOUSEENTERED, (page) => {
       mainLayerRef.onPageMouseEntered(page);
     });
+    this.layerCtr++;
+    bottomPage.PanelName = "Panel"+ this.layerCtr;
 
     this.layers.push(layerPages);
+    console.log("layers check: ", this.layers); //[0][1]
+    //saveWork(this.layers);
   }
 
   sliceHorizontally(mousePos: any) {
@@ -254,6 +260,8 @@ export class MainLayer {
     leftPage.group.on(PAGEEVENTS.MOUSEENTERED, (page) => {
       mainLayerRef.onPageMouseEntered(page);
     });
+    this.layerCtr++;
+    leftPage.PanelName = "Panel"+ this.layerCtr;
 
     //* Create bottom position layer
     let remainingWidth = parentPage.origWidth - width;
@@ -272,6 +280,7 @@ export class MainLayer {
     layerPages.push(rightPage);
     this.outerLayer.push(rightPage);
     this.layers.push(layerPages);
+    console.log("layers check: ", this.layers);//[1][0]
   }
 
   removeElementByValue(arr: [], value: any) {

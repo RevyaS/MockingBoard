@@ -6,6 +6,8 @@ import { MainLayer } from './layers/MainLayer';
 import { DebuggingSquare } from './layers/DebuggingSquare';
 import STAGEEVENTS from './states/StageEvents';
 import { Stage } from 'konva/lib/Stage';
+import { PropertyPanel } from './layers/PropertyPanel';
+//import {SaveProject} from './states/SaveProject';
 
 //* Data
 var appState: any;
@@ -17,11 +19,18 @@ var verticalSliceButton: JQuery<HTMLElement>;
 var circleGenerateButton: JQuery<HTMLElement>;
 var html: JQuery<HTMLElement>;
 var itemList: JQuery<HTMLElement>;
+var propertylist: JQuery<HTMLElement>;
 var componentListToggle: JQuery<HTMLElement>;
+var propertyPLBTn : JQuery<HTMLElement>;
 var bodyContainer: JQuery<HTMLElement>;
+var mainBody : JQuery<HTMLElement>;
+
+//const propertychange = document.getElementById("propertyPLBTn");
 
 //* Canvas Variables
 var stage: Stage;
+// var pages: any;
+// var save: SaveProject;
 
 $(() => {
   appState = APPSTATE.DEFAULT;
@@ -32,18 +41,26 @@ $(() => {
   circleGenerateButton = $('#circleGenerate');
 
   itemList = $('#itemList');
+  propertylist = $('#propertylist');
   componentListToggle = $('#componentListToggle');
   componentListToggle.click(toggleComponentList);
-
+  propertyPLBTn = $('#propertyPLBTn');
+  propertyPLBTn.click(togglePropertyPanel);
+  mainBody = $('#myDIV');
+  mainBody.scroll(getscrollvalues)
   bodyContainer = $('#bodyContainer');
   html = $('html');
 
   //* Initial setup
+  //propertychange.style.marginLeft = "0px";  
+  propertyPLBTn.html('<');
+  // propertylist.hide();
   itemList.hide();
 
   konvaSetup();
   eventSetup();
 });
+
 
 function konvaSetup() {
   stage = new Konva.Stage({
@@ -55,9 +72,14 @@ function konvaSetup() {
   //DEBUG Items
   let mainLayer = new MainLayer();
   let debugSquare = new DebuggingSquare(25, 0, mainLayer);
+  let propertyPanel = new PropertyPanel(mainLayer.page);
+
+  //pages = mainLayer.page;
 
   mainLayer.layer.on(PAGEEVENTS.MOUSEENTERED, (page) => {
     debugSquare.setCurrentPage(page);
+    propertyPanel.Panelset(page);
+    //pages = page;
   });
 
   mainLayer.layer.on(PAGEEVENTS.MOUSEEXITED, () => {
@@ -66,6 +88,7 @@ function konvaSetup() {
 
   stage.on(STAGEEVENTS.LEFTMOUSECLICKED, () => {
     mainLayer.onMouseClicked();
+    propertyPanel.PanelClick();
   });
 
   stage.on(STAGEEVENTS.MOUSEMOVED, () => {
@@ -84,9 +107,36 @@ function konvaSetup() {
     mainLayer.onStateChanged(appState);
   });
 
+  stage.add(propertyPanel.layer);
   stage.add(mainLayer.layer);
   stage.add(debugSquare.layer);
 }
+function getscrollvalues()
+{
+  var listposition = []
+  const element = document.getElementById("myDIV");
+  listposition[0] = element?.scrollLeft;
+  listposition[1] = element?.scrollTop;
+  return listposition;
+}
+// function onClickSaveProject()
+// {
+//   console.log(pages.PanelName);
+//   console.log(pages.origWidth);
+//   console.log(pages.origHeight);
+//   console.log(pages.width);
+//   console.log(pages.height);
+//   console.log(pages.fill);
+//   console.log(pages.x);
+//   console.log(pages.y);
+//   console.log(pages.layerIndex);
+//   console.log(pages.mouseEntered);
+//   console.log(pages.gradientOutlineAmount);
+//   console.log(pages.gradientWidth);
+//   console.log(pages.zIndex);
+
+//   //let save = new SaveProject(pages);
+// }
 
 function eventSetup() {
   stage.on('mousemove', () => {
@@ -135,6 +185,23 @@ function toggleComponentList() {
   else {
     componentListToggle.html('>');
     itemList.hide();
+  }
+}
+
+function togglePropertyPanel()
+{
+  //Hide
+  if (propertyPLBTn.html().trim() == '&gt;') {
+    propertyPLBTn.html('<');
+    //propertychange.style.marginLeft = "0px";  
+    propertylist.hide();
+    console.log('s');
+  } //Show
+  else {
+    propertyPLBTn.html('>');
+    propertylist.show();
+    //propertychange.style.marginLeft = "-200px";  
+    console.log('h');
   }
 }
 

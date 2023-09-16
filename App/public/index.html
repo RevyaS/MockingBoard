@@ -14,7 +14,7 @@
 </head>
 
 <body>
-  <div class="flex-column d-flex h-100 w-100">
+  <div class="flex-column d-flex h-100 w-100" id="mainBody">
     <!-- Toolbar -->
     <div class="row w-100 ps-4 m-0 gap-2" id="toolbar">
       <button class="toolbar-btn-image" id="horizontalSliceTool">
@@ -23,6 +23,11 @@
       <button class="toolbar-btn-image" id="verticalSliceTool">
         <img class="h-75 rotate90" src="\assets\icons\toolbar-slice.png" />
       </button>
+
+      <!-- <button id="saveBtn" onclick="onClickSaveProject">
+        save
+      </button> -->
+
     </div>
 
     <div class="flex-grow-1" id="bodyContainer">
@@ -38,19 +43,45 @@
             <img src="/assets/icons/toolbar-slice.png" alt="Icon" class="mr-2" />
             <span>Circle</span>
           </button>
-
+          
 
           <!-- Add more buttons here -->
         </div>
-        <button class="h-100" id="componentListToggle">
-          &gt;
-        </button>
+          <button class="h-100" id="componentListToggle">
+            &gt;
+          </button>
+      </div>
+      
+      <!-- <div id="myDIV" onscroll="myFunction()">
+        <div id="content">Scroll me!</div>
       </div>
 
 
+      <p id="demo"></p>
+
+      <script>
+        function myFunction() {
+          const element = document.getElementById("myDIV");
+          let x = element.scrollLeft;
+          let y = element.scrollTop;
+          document.getElementById ("demo").innerHTML = "Horizontally: " + x.toFixed() + "<br>Vertically: " + y.toFixed();
+        }
+        </script> -->
+        
+
+        <!--  Property Panel -->
+      <!-- <div id = propertyPanel >
+        <div id="propertylist">
+        </div>
+        <button id="propertyPLBTn">
+          &gt;
+        </button>
+      </div> -->
+
+      <!-- Save File -->
+
     </div>
   </div>
-
 
 </body>
 <script type="module" src="lib/bootstrap-5.1.3-dist/js/bootstrap.min.js"></script>

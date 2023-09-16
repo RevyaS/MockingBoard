@@ -17,6 +17,7 @@ class Page {
   pageShape: Rect;
   group: Group;
   gradient = <any>[];
+  PanelName: string;
 
   horizontalSliceGuideLine: HorizontalSlideGuide;
   verticalRuler: VerticalRuler;
@@ -34,8 +35,9 @@ class Page {
     public y: number,
     public width: number,
     public height: number,
-    public layerIndex: number,
+    public layerIndex: number
   ) {
+    this.PanelName = 'Panel1';
     this.origWidth = width;
     this.origHeight = height;
     this.width = width;
@@ -124,6 +126,8 @@ class Page {
       y: this.y,
     });
   }
+
+
 
   getPosition() {
     let pos = {
@@ -317,6 +321,10 @@ class Page {
     this.pageShape.setAttrs({
       fill: newColor,
     });
+  }
+  setPropertyName(newPanelName: string)
+  {
+      this.PanelName = newPanelName;
   }
 
   setOpacity(newOpacity: number) {
