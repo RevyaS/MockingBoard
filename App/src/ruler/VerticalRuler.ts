@@ -71,7 +71,6 @@ class VerticalRuler {
     let textValue = new Konva.Text({
       x: textX,
       y: y,
-      // fontFamily: this.fontFamily, //! where did u get this?
       fontSize: this.fontSize,
       width: this.textWidth,
       height: height,
