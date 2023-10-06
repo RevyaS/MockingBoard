@@ -53,68 +53,91 @@ class Page {
       y: y,
     });
 
-    //* Generate gradient
-    const gradientOpacityDivision = 1 / this.gradientOutlineAmount;
-    const gradientWidthDivision =
-      this.gradientWidth / this.gradientOutlineAmount;
+    this.group = group;
 
-    for (let i = 1; i <= this.gradientOutlineAmount; ++i) {
-      let strokeWidth = this.gradientWidth - gradientWidthDivision * (i - 1);
+    generateGradient(this);
+    this.pageShape = generatePage(this);
+    this.horizontalSliceGuideLine = generateHorizontalGuideLine(this);
+    this.verticalRuler = generateVerticalRuler(this);
+    this.verticalSliceGuideLine = generateVerticalSliceGuideLine(this);
+    this.circleGuideLine = generateCircleGuideLine();
+    this.horizontalRuler = generateHorizontalRuler(this);
 
-      let gradientOpacity = gradientOpacityDivision * i;
-      let strokeColor = `rgba(186, 104, 237, ${gradientOpacity})`;
-      let pageShapeOutline = new Konva.Rect({
-        x: 0,
-        y: 0,
-        width: this.width,
-        height: this.height,
-        stroke: strokeColor,
-        strokeWidth: strokeWidth,
-      });
-
-      //* might go error
-      this.gradient.push(pageShapeOutline);
-      group.add(pageShapeOutline);
+    function generateHorizontalRuler(self: Page) {
+      let horizontalRuler = new HorizontalRuler(0, 0, 100, self.width, true);
+      group.add(horizontalRuler.group);
+      horizontalRuler.setOpacity(0);
+      return horizontalRuler;
     }
 
-    this.setGradientOpacity(0);
+    function generateCircleGuideLine() {
+      let circleGuideLine = new CircleGuide(0, 0, 50);
+      group.add(circleGuideLine.group);
+      circleGuideLine.setOpacity(0);
+      return circleGuideLine;
+    }
 
-    this.pageShape = new Konva.Rect({
-      x: 0,
-      y: 0,
-      width: this.width,
-      height: this.height,
-      fill: this.fill,
-    });
+    function generateVerticalSliceGuideLine(self: Page) {
+      let verticalSliceGuideLine = new VerticalSliceGuide(0, 0, self.height);
+      group.add(verticalSliceGuideLine.group);
+      verticalSliceGuideLine.setOpacity(0);
+      return verticalSliceGuideLine;
+    }
 
-    group.add(this.pageShape);
+    function generateVerticalRuler(self: Page) {
+      let verticalRuler = new VerticalRuler(0, 0, 100, self.height, true);
+      group.add(verticalRuler.group);
+      verticalRuler.setOpacity(0);
+      return verticalRuler;
+    }
 
-    let horizontalSliceGuideLine = new HorizontalSlideGuide(0, 0, this.width);
-    group.add(horizontalSliceGuideLine.group);
-    horizontalSliceGuideLine.setOpacity(0);
-    this.horizontalSliceGuideLine = horizontalSliceGuideLine;
+    function generateHorizontalGuideLine(self: Page) {
+      let horizontalSliceGuideLine = new HorizontalSlideGuide(0, 0, self.width);
+      self.group.add(horizontalSliceGuideLine.group);
+      horizontalSliceGuideLine.setOpacity(0);
+      return horizontalSliceGuideLine;
+    }
 
-    let verticalRuler = new VerticalRuler(0, 0, 100, this.height, true);
-    group.add(verticalRuler.group);
-    verticalRuler.setOpacity(0);
-    this.verticalRuler = verticalRuler;
+    function generatePage(self: Page) {
+      let pageShape = new Konva.Rect({
+        x: 0,
+        y: 0,
+        width: self.width,
+        height: self.height,
+        fill: self.fill,
+      });
 
-    let verticalSliceGuideLine = new VerticalSliceGuide(0, 0, this.height);
-    group.add(verticalSliceGuideLine.group);
-    verticalSliceGuideLine.setOpacity(0);
-    this.verticalSliceGuideLine = verticalSliceGuideLine;
+      self.group.add(pageShape);
+      return pageShape;
+    }
 
-    let circleGuideLine = new CircleGuide(0, 0, 50);
-    group.add(circleGuideLine.group);
-    circleGuideLine.setOpacity(0);
-    this.circleGuideLine = circleGuideLine;
+    function generateGradient(self: Page) {
+      //* Generate gradient
+      const gradientOpacityDivision = 1 / self.gradientOutlineAmount;
+      const gradientWidthDivision =
+        self.gradientWidth / self.gradientOutlineAmount;
 
-    let horizontalRuler = new HorizontalRuler(0, 0, 100, this.width, true);
-    group.add(horizontalRuler.group);
-    horizontalRuler.setOpacity(0);
-    this.horizontalRuler = horizontalRuler;
+      for (let i = 1; i <= self.gradientOutlineAmount; ++i) {
+        let strokeWidth = self.gradientWidth - gradientWidthDivision * (i - 1);
 
-    this.group = group;
+        let gradientOpacity = gradientOpacityDivision * i;
+        let strokeColor = `rgba(186, 104, 237, ${gradientOpacity})`;
+        let pageShapeOutline = new Konva.Rect({
+          x: 0,
+          y: 0,
+          width: self.width,
+          height: self.height,
+          stroke: strokeColor,
+          strokeWidth: strokeWidth,
+        });
+
+        //* might go error
+        self.gradient.push(pageShapeOutline);
+        self.group.add(pageShapeOutline);
+      }
+
+      self.setGradientOpacity(0);
+    }
   }
 
   //***************** Functions ************************/'
@@ -322,9 +345,8 @@ class Page {
       fill: newColor,
     });
   }
-  setPropertyName(newPanelName: string)
-  {
-      this.PanelName = newPanelName;
+  setPropertyName(newPanelName: string) {
+    this.PanelName = newPanelName;
   }
 
   setOpacity(newOpacity: number) {
