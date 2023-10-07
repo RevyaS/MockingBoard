@@ -45,8 +45,8 @@ export class PropertyPanel {
     var currentWidth = this.panel.Panels("Width", "0", x_ + 75, page.width);
     var currentHeight = this.panel.Panels("Height", "0", x_ + 100, page.height);
     var fill = this.panel.Panels("Fill", "0", x_ + 125, page.fill);
-    var xPos = this.panel.Panels("X", "0", x_ + 150, page.x);
-    var yPos = this.panel.Panels("y", "0", x_ + 175, page.y);
+    var xPos = this.panel.Panels("X", "0", x_ + 150, page.position.x);
+    var yPos = this.panel.Panels("y", "0", x_ + 175, page.position.y);
     var layerIndex = this.panel.Panels("Layer Index", "0", x_ + 200, page.layerIndex);
     var mouseEntered = this.panel.Panels("Mouse Entered", "0", x_ + 225, page.mouseEntered);
     var gradientOutlineAmount = this.panel.Panels("Gradient Outline Amount", "0", x_ + 250, page.gradientOutlineAmount);

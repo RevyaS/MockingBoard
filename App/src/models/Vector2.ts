@@ -4,6 +4,10 @@ class Vector2 {
 
 	}
 
-
-
+	updateFloored(x: number, y: number) {
+		this.x = Math.floor(x);
+		this.y = Math.floor(y);
+	}
 }
+
+export default Vector2;

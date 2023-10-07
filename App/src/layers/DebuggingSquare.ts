@@ -1,5 +1,6 @@
 import Konva from 'konva';
 import MainLayer from './MainLayer';
+import Page from '../shapes/Page';
 
 export class DebuggingSquare {
   width: number;
@@ -315,39 +316,39 @@ export class DebuggingSquare {
     this.layer.opacity(opacity);
   }
 
-  setCurrentPage(currentPage: any) {
+  setCurrentPage(currentPage: Page) {
     this.currentPage = currentPage;
     for (let pagedata of this.currentPageData) {
       pagedata.opacity(1);
       //Update values
       this.pageBounds00.setAttrs({
-        text: 'selectedPage00: (' + currentPage.x + ',' + currentPage.y + ')',
+        text: 'selectedPage00: (' + currentPage.position.x + ',' + currentPage.position.y + ')',
       });
 
       this.pageBounds01.setAttrs({
         text:
           'selectedPage01: (' +
-          currentPage.x +
+          currentPage.position.x +
           ',' +
-          (currentPage.y + currentPage.height) +
+          (currentPage.position.y + currentPage.height) +
           ')',
       });
 
       this.pageBounds10.setAttrs({
         text:
           'selectedPage10: (' +
-          (currentPage.x + currentPage.width) +
+          (currentPage.position.x + currentPage.width) +
           ',' +
-          currentPage.y +
+          currentPage.position.y +
           ')',
       });
 
       this.pageBounds11.setAttrs({
         text:
           'selectedPage11: (' +
-          (currentPage.x + currentPage.width) +
+          (currentPage.position.x + currentPage.width) +
           ',' +
-          (currentPage.y + currentPage.height) +
+          (currentPage.position.y + currentPage.height) +
           ')',
       });
 

@@ -3,6 +3,7 @@ import APPSTATE from '../states/AppState';
 import Page from '../shapes/Page';
 import PAGEEVENTS from '../states/PageEvents';
 import { Layer } from 'konva/lib/Layer';
+import Vector2 from '../models/Vector2';
 
 export class MainLayer {
   //* Just type public in this fields if u want to make it public
@@ -14,7 +15,7 @@ export class MainLayer {
   outerLayer = <any>[];
 
   state: string;
-  selectedPage: any;
+  selectedPage: Page | null = null;
   width: number;
   height: any;
   layer: Layer;
@@ -41,7 +42,7 @@ export class MainLayer {
     layer.add(group);
 
     //* Iniial Page Size
-    const page = new Page(0, 0, this.origWidth, this.origHeight, 0);
+    const page = new Page(new Vector2(0, 0), this.origWidth, this.origHeight, 0);
 
     group.add(page.group);
 
@@ -61,7 +62,7 @@ export class MainLayer {
     };
   }
 
-  onPageMouseEntered(page: any) {
+  onPageMouseEntered(page: Page) {
     this.selectedPage = page;
     this.layer.fire(PAGEEVENTS.MOUSEENTERED, page);
   }
@@ -94,8 +95,8 @@ export class MainLayer {
     if (this.selectedPage == null) return;
 
     let relativeMouseFromSelectedPage = {
-      x: relativeMouse.x - this.selectedPage.x,
-      y: relativeMouse.y - this.selectedPage.y,
+      x: relativeMouse.x - this.selectedPage.position.x,
+      y: relativeMouse.y - this.selectedPage.position.y,
     };
 
     switch (this.state) {
@@ -120,7 +121,7 @@ export class MainLayer {
 
     //* Reposition
     let newScale = this.group.scale();
-    let scalarOffset = currentScale.x - newScale.x;
+    let scalarOffset = currentScale!.x - newScale!.x;
     let offset = {
       x: Math.floor(zoomCenter.x) * scalarOffset,
       y: Math.floor(zoomCenter.y) * scalarOffset,
@@ -181,16 +182,15 @@ export class MainLayer {
     let layerPages = <any>[];
     let parentPage = this.selectedPage;
     this.removeElementByValue(this.outerLayer, this.selectedPage);
-    this.selectedPage.mouseExit();
-    this.selectedPage.setState(APPSTATE.DEFAULT);
+    this.selectedPage!.mouseExit();
+    this.selectedPage!.setState(APPSTATE.DEFAULT);
     this.currentLayer++;
 
     //* Create top position based on selected page
-    let height = Math.floor(mousePos.y - parentPage.y);
+    let height = Math.floor(mousePos.y - parentPage!.position.y);
     let topPage = new Page(
-      parentPage.x,
-      parentPage.y,
-      parentPage.origWidth,
+      new Vector2(parentPage!.position.x, parentPage!.position.y),
+      parentPage!.origWidth,
       height,
       this.currentLayer,
     );
@@ -207,12 +207,11 @@ export class MainLayer {
     });
 
     //* Create bottom position layer
-    let remainingHeight = parentPage.origHeight - height;
+    let remainingHeight = parentPage!.origHeight - height;
 
     let bottomPage = new Page(
-      parentPage.x,
-      height + parentPage.y,
-      parentPage.origWidth,
+      new Vector2(parentPage!.position.x, height + parentPage!.position.y),
+      parentPage!.origWidth,
       remainingHeight,
       this.currentLayer,
     );
@@ -237,16 +236,15 @@ export class MainLayer {
     let parentPage = this.selectedPage;
     this.removeElementByValue(this.outerLayer, this.selectedPage);
 
-    this.selectedPage.mouseExit();
+    this.selectedPage!.mouseExit();
     this.currentLayer++;
 
     //* Create left position based on selected page
-    let width = Math.floor(mousePos.x - parentPage.x);
+    let width = Math.floor(mousePos.x - parentPage!.position.x);
     let leftPage = new Page(
-      parentPage.x,
-      parentPage.y,
+      new Vector2(parentPage!.position.x, parentPage!.position.y),
       width,
-      parentPage.origHeight,
+      parentPage!.origHeight,
       this.currentLayer,
     );
 
@@ -262,12 +260,11 @@ export class MainLayer {
     leftPage.PanelName = "Panel" + this.layerCtr;
 
     //* Create bottom position layer
-    let remainingWidth = parentPage.origWidth - width;
+    let remainingWidth = parentPage!.origWidth - width;
     let rightPage = new Page(
-      parentPage.x + width,
-      parentPage.y,
+      new Vector2(parentPage!.position.x + width, parentPage!.position.y),
       remainingWidth,
-      parentPage.origHeight,
+      parentPage!.origHeight,
       this.currentLayer,
     );
     this.group.add(rightPage.group);
@@ -352,16 +349,16 @@ export class MainLayer {
       draggable: true,
     });
 
-    let maxZIndex = this.selectedPage.group.children.length - 1;
+    let maxZIndex = this.selectedPage!.group.children!.length! - 1;
 
     //* set the position of the circle
     circle.x(relativePos.x);
     circle.y(relativePos.y);
 
-    this.selectedPage.mouseExit();
-    this.selectedPage.setState(APPSTATE.DEFAULT);
+    this.selectedPage!.mouseExit();
+    this.selectedPage!.setState(APPSTATE.DEFAULT);
 
-    this.selectedPage.group.add(circle);
+    this.selectedPage!.group.add(circle);
   }
 }
 

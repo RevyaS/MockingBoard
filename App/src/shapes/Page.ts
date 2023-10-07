@@ -8,7 +8,7 @@ import VerticalSliceGuide from './VerticalSliceGuide';
 import HorizontalRuler from '../ruler/HorizontalRuler';
 import CircleGuide from './CircleGuide';
 import PAGEEVENTS from '../states/PageEvents';
-
+import Vector2 from '../models/Vector2';
 class Page {
   origWidth: number;
   origHeight: number;
@@ -31,8 +31,7 @@ class Page {
   circleGuideLine: CircleGuide;
 
   constructor(
-    public x: number,
-    public y: number,
+    public position: Vector2,
     public width: number,
     public height: number,
     public layerIndex: number
@@ -43,14 +42,12 @@ class Page {
     this.width = width;
     this.height = height;
     this.fill = '#6f6f6f';
-    this.x = x;
-    this.y = y;
     this.layerIndex = layerIndex;
     this.zIndex = layerIndex;
 
     const group = new Konva.Group({
-      x: x,
-      y: y,
+      x: this.position.x,
+      y: this.position.y,
     });
 
     this.group = group;
@@ -142,11 +139,10 @@ class Page {
 
   //***************** Functions ************************/'
   setPosition(x: number, y: number) {
-    this.x = Math.floor(x);
-    this.y = Math.floor(y);
+    this.position.updateFloored(x, y);
     this.group.setAttrs({
-      x: this.x,
-      y: this.y,
+      x: this.position.x,
+      y: this.position.y,
     });
   }
 
@@ -217,8 +213,8 @@ class Page {
       this.getRelativePositionUnscaled(relativeMouse);
     let mouseBoundsData = this.getMouseBoundsData(relativeMouse);
     let relativePositionFromParent = {
-      x: relativePositionUnscaled.x + this.x,
-      y: relativePositionUnscaled.y + this.y,
+      x: relativePositionUnscaled.x + this.position.x,
+      y: relativePositionUnscaled.y + this.position.y,
     };
 
     //Set Ruler position
@@ -248,8 +244,8 @@ class Page {
       this.getRelativePositionUnscaled(relativeMouse);
     let mouseBoundsData = this.getMouseBoundsData(relativeMouse);
     let relativePositionFromParent = {
-      x: relativePositionUnscaled.x + this.x,
-      y: relativePositionUnscaled.y + this.y,
+      x: relativePositionUnscaled.x + this.position.x,
+      y: relativePositionUnscaled.y + this.position.y,
     };
     //Set Ruler position
     this.horizontalRuler.setBottomOffset(!mouseBoundsData.halfBounds.top);
@@ -286,8 +282,8 @@ class Page {
   getRelativePositionUnscaled(mousePos: { x: number; y: number }) {
     //Compute Relative Position of mouse to Page
     let relativePosition = {
-      x: mousePos.x - this.x,
-      y: mousePos.y - this.y,
+      x: mousePos.x - this.position.x,
+      y: mousePos.y - this.position.y,
     };
     //Get Ratio
     let relativeRatio = {
@@ -303,14 +299,14 @@ class Page {
   }
 
   getMouseBoundsData(mousePos: { x: number, y: number }) {
-    let topYBounds = this.y > mousePos.y + this.y;
-    let bottomYBounds = this.y + this.height <= mousePos.y + this.y;
+    let topYBounds = this.position.y > mousePos.y + this.position.y;
+    let bottomYBounds = this.position.y + this.height <= mousePos.y + this.position.y;
     let inYBounds = !(topYBounds || bottomYBounds);
-    let onTopHalf = this.y + this.height / 2 > mousePos.y + this.y;
-    let onLeftHalf = this.x + this.width / 2 > mousePos.x;
+    let onTopHalf = this.position.y + this.height / 2 > mousePos.y + this.position.y;
+    let onLeftHalf = this.position.x + this.width / 2 > mousePos.x;
 
-    let rightXBounds = this.x > mousePos.x + this.x;
-    let leftXBounds = this.x + this.width < mousePos.x + this.x;
+    let rightXBounds = this.position.x > mousePos.x + this.position.x;
+    let leftXBounds = this.position.x + this.width < mousePos.x + this.position.x;
     let inXBounds = !(rightXBounds || leftXBounds);
 
     let mouseBoundsData = {
