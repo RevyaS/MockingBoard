@@ -40,10 +40,10 @@ export class PropertyPanel {
     let x_ = 0;
 
     var Name = this.panel.Panels("Property Name:", "0", x_, page.PanelName);
-    var origWidth = this.panel.Panels("Orign Width", "0", x_ + 25, page.origWidth);
-    var origHeight = this.panel.Panels("Orign Height", "0", x_ + 50, page.origHeight);
-    var currentWidth = this.panel.Panels("Width", "0", x_ + 75, page.width);
-    var currentHeight = this.panel.Panels("Height", "0", x_ + 100, page.height);
+    var origWidth = this.panel.Panels("Orign Width", "0", x_ + 25, page.origSize.x);
+    var origHeight = this.panel.Panels("Orign Height", "0", x_ + 50, page.origSize.y);
+    var currentWidth = this.panel.Panels("Width", "0", x_ + 75, page.size.x);
+    var currentHeight = this.panel.Panels("Height", "0", x_ + 100, page.size.y);
     var fill = this.panel.Panels("Fill", "0", x_ + 125, page.fill);
     var xPos = this.panel.Panels("X", "0", x_ + 150, page.position.x);
     var yPos = this.panel.Panels("y", "0", x_ + 175, page.position.y);
@@ -107,13 +107,13 @@ export class PropertyPanel {
       let x_ = 0;
 
       var Name = this.panel.Panels("Property Name:", "0", x_, this.pages.PanelName);
-      var origWidth = this.panel.Panels("Orign Width", "0", x_ + 25, this.pages.origWidth);
-      var origHeight = this.panel.Panels("Orign Height", "0", x_ + 50, this.pages.origHeight);
-      var currentWidth = this.panel.Panels("Width", "0", x_ + 75, this.pages.width);
-      var currentHeight = this.panel.Panels("Height", "0", x_ + 100, this.pages.height);
+      var origWidth = this.panel.Panels("Orign Width", "0", x_ + 25, this.pages.origSize.x);
+      var origHeight = this.panel.Panels("Orign Height", "0", x_ + 50, this.pages.origSize.y);
+      var currentWidth = this.panel.Panels("Width", "0", x_ + 75, this.pages.size.x);
+      var currentHeight = this.panel.Panels("Height", "0", x_ + 100, this.pages.size.y);
       var fill = this.panel.Panels("Fill", "0", x_ + 125, this.pages.fill);
-      var xPos = this.panel.Panels("X", "0", x_ + 150, this.pages.x);
-      var yPos = this.panel.Panels("y", "0", x_ + 175, this.pages.y);
+      var xPos = this.panel.Panels("X", "0", x_ + 150, this.pages.position.x);
+      var yPos = this.panel.Panels("y", "0", x_ + 175, this.pages.position.y);
       var layerIndex = this.panel.Panels("Layer Index", "0", x_ + 200, this.pages.layerIndex);
       var mouseEntered = this.panel.Panels("Mouse Entered", "0", x_ + 225, this.pages.mouseEntered);
       var gradientOutlineAmount = this.panel.Panels("Gradient Outline Amount", "0", x_ + 250, this.pages.gradientOutlineAmount);

@@ -330,14 +330,14 @@ export class DebuggingSquare {
           'selectedPage01: (' +
           currentPage.position.x +
           ',' +
-          (currentPage.position.y + currentPage.height) +
+          (currentPage.position.y + currentPage.size.y) +
           ')',
       });
 
       this.pageBounds10.setAttrs({
         text:
           'selectedPage10: (' +
-          (currentPage.position.x + currentPage.width) +
+          (currentPage.position.x + currentPage.size.x) +
           ',' +
           currentPage.position.y +
           ')',
@@ -346,9 +346,9 @@ export class DebuggingSquare {
       this.pageBounds11.setAttrs({
         text:
           'selectedPage11: (' +
-          (currentPage.position.x + currentPage.width) +
+          (currentPage.position.x + currentPage.size.x) +
           ',' +
-          (currentPage.position.y + currentPage.height) +
+          (currentPage.position.y + currentPage.size.y) +
           ')',
       });
 
@@ -356,9 +356,9 @@ export class DebuggingSquare {
       this.pageSize.setAttrs({
         text:
           'selectedPageSize: (' +
-          currentPage.width +
+          currentPage.size.x +
           ',' +
-          currentPage.height +
+          currentPage.size.y +
           ')',
       });
     }

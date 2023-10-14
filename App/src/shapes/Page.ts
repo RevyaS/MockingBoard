@@ -10,8 +10,7 @@ import CircleGuide from './CircleGuide';
 import PAGEEVENTS from '../states/PageEvents';
 import Vector2 from '../models/Vector2';
 class Page {
-  origWidth: number;
-  origHeight: number;
+  origSize: Vector2;
   fill: string;
   zIndex: number;
   pageShape: Rect;
@@ -32,15 +31,11 @@ class Page {
 
   constructor(
     public position: Vector2,
-    public width: number,
-    public height: number,
+    public size: Vector2,
     public layerIndex: number
   ) {
+    this.origSize = size;
     this.PanelName = 'Panel1';
-    this.origWidth = width;
-    this.origHeight = height;
-    this.width = width;
-    this.height = height;
     this.fill = '#6f6f6f';
     this.layerIndex = layerIndex;
     this.zIndex = layerIndex;
@@ -61,7 +56,7 @@ class Page {
     this.horizontalRuler = generateHorizontalRuler(this);
 
     function generateHorizontalRuler(self: Page) {
-      let horizontalRuler = new HorizontalRuler(0, 0, 100, self.width, true);
+      let horizontalRuler = new HorizontalRuler(0, 0, 100, self.size.x, true);
       group.add(horizontalRuler.group);
       horizontalRuler.setOpacity(0);
       return horizontalRuler;
@@ -75,21 +70,21 @@ class Page {
     }
 
     function generateVerticalSliceGuideLine(self: Page) {
-      let verticalSliceGuideLine = new VerticalSliceGuide(0, 0, self.height);
+      let verticalSliceGuideLine = new VerticalSliceGuide(0, 0, self.size.y);
       group.add(verticalSliceGuideLine.group);
       verticalSliceGuideLine.setOpacity(0);
       return verticalSliceGuideLine;
     }
 
     function generateVerticalRuler(self: Page) {
-      let verticalRuler = new VerticalRuler(0, 0, 100, self.height, true);
+      let verticalRuler = new VerticalRuler(0, 0, 100, self.size.y, true);
       group.add(verticalRuler.group);
       verticalRuler.setOpacity(0);
       return verticalRuler;
     }
 
     function generateHorizontalGuideLine(self: Page) {
-      let horizontalSliceGuideLine = new HorizontalSlideGuide(0, 0, self.width);
+      let horizontalSliceGuideLine = new HorizontalSlideGuide(0, 0, self.size.x);
       self.group.add(horizontalSliceGuideLine.group);
       horizontalSliceGuideLine.setOpacity(0);
       return horizontalSliceGuideLine;
@@ -99,8 +94,8 @@ class Page {
       let pageShape = new Konva.Rect({
         x: 0,
         y: 0,
-        width: self.width,
-        height: self.height,
+        width: self.size.x,
+        height: self.size.y,
         fill: self.fill,
       });
 
@@ -122,8 +117,8 @@ class Page {
         let pageShapeOutline = new Konva.Rect({
           x: 0,
           y: 0,
-          width: self.width,
-          height: self.height,
+          width: self.size.x,
+          height: self.size.y,
           stroke: strokeColor,
           strokeWidth: strokeWidth,
         });
@@ -287,12 +282,12 @@ class Page {
     };
     //Get Ratio
     let relativeRatio = {
-      x: relativePosition.x / this.width,
-      y: relativePosition.y / this.height,
+      x: relativePosition.x / this.size.x,
+      y: relativePosition.y / this.size.y,
     };
     let relativePositionUnscaled = {
-      x: this.origWidth * relativeRatio.x,
-      y: this.origHeight * relativeRatio.y,
+      x: this.origSize.x * relativeRatio.x,
+      y: this.origSize.y * relativeRatio.y,
     };
 
     return relativePositionUnscaled;
@@ -300,13 +295,13 @@ class Page {
 
   getMouseBoundsData(mousePos: { x: number, y: number }) {
     let topYBounds = this.position.y > mousePos.y + this.position.y;
-    let bottomYBounds = this.position.y + this.height <= mousePos.y + this.position.y;
+    let bottomYBounds = this.position.y + this.size.y <= mousePos.y + this.position.y;
     let inYBounds = !(topYBounds || bottomYBounds);
-    let onTopHalf = this.position.y + this.height / 2 > mousePos.y + this.position.y;
-    let onLeftHalf = this.position.x + this.width / 2 > mousePos.x;
+    let onTopHalf = this.position.y + this.size.y / 2 > mousePos.y + this.position.y;
+    let onLeftHalf = this.position.x + this.size.x / 2 > mousePos.x;
 
     let rightXBounds = this.position.x > mousePos.x + this.position.x;
-    let leftXBounds = this.position.x + this.width < mousePos.x + this.position.x;
+    let leftXBounds = this.position.x + this.size.x < mousePos.x + this.position.x;
     let inXBounds = !(rightXBounds || leftXBounds);
 
     let mouseBoundsData = {

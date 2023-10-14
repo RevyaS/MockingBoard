@@ -42,7 +42,7 @@ export class MainLayer {
     layer.add(group);
 
     //* Iniial Page Size
-    const page = new Page(new Vector2(0, 0), this.origWidth, this.origHeight, 0);
+    const page = new Page(new Vector2(0, 0), new Vector2(this.origWidth, this.origHeight), 0);
 
     group.add(page.group);
 
@@ -190,8 +190,7 @@ export class MainLayer {
     let height = Math.floor(mousePos.y - parentPage!.position.y);
     let topPage = new Page(
       new Vector2(parentPage!.position.x, parentPage!.position.y),
-      parentPage!.origWidth,
-      height,
+      new Vector2(parentPage!.origSize.x, height),
       this.currentLayer,
     );
 
@@ -207,12 +206,11 @@ export class MainLayer {
     });
 
     //* Create bottom position layer
-    let remainingHeight = parentPage!.origHeight - height;
+    let remainingHeight = parentPage!.origSize.y - height;
 
     let bottomPage = new Page(
       new Vector2(parentPage!.position.x, height + parentPage!.position.y),
-      parentPage!.origWidth,
-      remainingHeight,
+      new Vector2(parentPage!.origSize.x, remainingHeight),
       this.currentLayer,
     );
 
@@ -243,8 +241,7 @@ export class MainLayer {
     let width = Math.floor(mousePos.x - parentPage!.position.x);
     let leftPage = new Page(
       new Vector2(parentPage!.position.x, parentPage!.position.y),
-      width,
-      parentPage!.origHeight,
+      new Vector2(width, parentPage!.origSize.y),
       this.currentLayer,
     );
 
@@ -260,11 +257,10 @@ export class MainLayer {
     leftPage.PanelName = "Panel" + this.layerCtr;
 
     //* Create bottom position layer
-    let remainingWidth = parentPage!.origWidth - width;
+    let remainingWidth = parentPage!.origSize.x - width;
     let rightPage = new Page(
       new Vector2(parentPage!.position.x + width, parentPage!.position.y),
-      remainingWidth,
-      parentPage!.origHeight,
+      new Vector2(remainingWidth, parentPage!.origSize.y),
       this.currentLayer,
     );
     this.group.add(rightPage.group);
@@ -318,6 +314,7 @@ export class MainLayer {
     let bottomXBounds = this.origWidth < mousePos.x;
     let inXBounds = !(topXBounds || bottomXBounds);
 
+    // Sets mouse BoundsData
     let mouseBoundsData = {
       topBounds: {
         x: topXBounds,
