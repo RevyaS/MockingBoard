@@ -203,7 +203,8 @@ class Page {
   }
 
   showHorizontalSliceGuideLine() {
-    let relativeMouse = this.group.getRelativePointerPosition();
+    let relativeMouseAny = this.group.getRelativePointerPosition();
+    let relativeMouse = new Vector2(relativeMouseAny.x, relativeMouseAny.y);
     let relativePositionUnscaled =
       this.getRelativePositionUnscaled(relativeMouse);
     let mouseBoundsData = this.getMouseBoundsData(relativeMouse);
@@ -234,7 +235,8 @@ class Page {
   }
 
   showVerticalSliceGuideLine() {
-    let relativeMouse = this.group.getRelativePointerPosition();
+    let relativeMouseAny = this.group.getRelativePointerPosition();
+    let relativeMouse = new Vector2(relativeMouseAny.x, relativeMouseAny.y);
     let relativePositionUnscaled =
       this.getRelativePositionUnscaled(relativeMouse);
     let mouseBoundsData = this.getMouseBoundsData(relativeMouse);
@@ -274,21 +276,12 @@ class Page {
     }
   }
 
-  getRelativePositionUnscaled(mousePos: { x: number; y: number }) {
+  getRelativePositionUnscaled(mousePos: Vector2) {
     //Compute Relative Position of mouse to Page
-    let relativePosition = {
-      x: mousePos.x - this.position.x,
-      y: mousePos.y - this.position.y,
-    };
-    //Get Ratio
-    let relativeRatio = {
-      x: relativePosition.x / this.size.x,
-      y: relativePosition.y / this.size.y,
-    };
-    let relativePositionUnscaled = {
-      x: this.origSize.x * relativeRatio.x,
-      y: this.origSize.y * relativeRatio.y,
-    };
+    let relativePositionUnscaled = mousePos.clone();
+    relativePositionUnscaled.subtractVec(this.position);
+    relativePositionUnscaled.divideVec(this.size);
+    relativePositionUnscaled.multiplyVec(this.origSize);
 
     return relativePositionUnscaled;
   }

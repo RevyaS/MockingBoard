@@ -160,7 +160,8 @@ export class MainLayer {
   }
 
   onMouseClicked() {
-    let pos = this.layer.getRelativePointerPosition();
+    let posAny = this.layer.getRelativePointerPosition();
+    let pos = new Vector2(posAny.x, posAny.y);
 
     //* Find Division
     let relativePos = this.getRelativePositionUnscaled(pos);
@@ -282,23 +283,12 @@ export class MainLayer {
     }
   }
 
-  getRelativePositionUnscaled(mousePos: any) {
+  getRelativePositionUnscaled(mousePos: Vector2) {
     //* Compute Relative Position of mouse to Page
-    let relativePosition = {
-      x: mousePos.x - this.x,
-      y: mousePos.y - this.y,
-    };
-
-    //* Get ratio
-    let relativeRatio = {
-      x: relativePosition.x / this.width,
-      y: relativePosition.y / this.height,
-    };
-
-    let relativePositionUnscaled = {
-      x: this.origWidth * relativeRatio.x,
-      y: this.origHeight * relativeRatio.y,
-    };
+    let relativePositionUnscaled = mousePos.clone();
+    relativePositionUnscaled.subtract(this.x, this.y);
+    relativePositionUnscaled.divide(this.width, this.height);
+    relativePositionUnscaled.multiply(this.origWidth, this.origHeight);
 
     return relativePositionUnscaled;
   }
