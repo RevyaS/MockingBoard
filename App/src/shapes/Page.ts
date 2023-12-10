@@ -182,7 +182,9 @@ class Page {
       this.zIndex = this.group.parent.children.length - 1;
       this.group.zIndex(this.zIndex);
 
-      this.group.fire(PAGEEVENTS.MOUSEENTERED, this);
+      //Generate event
+      const event = new CustomEvent(PAGEEVENTS.MOUSEENTERED, { detail: this })
+      this.group.fire(PAGEEVENTS.MOUSEENTERED, { evt: event });
     }
   }
 

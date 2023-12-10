@@ -4,9 +4,14 @@ import Page from '../shapes/Page';
 import PAGEEVENTS from '../states/PageEvents';
 import { Layer } from 'konva/lib/Layer';
 import Vector2 from '../models/Vector2';
+import { KonvaEventObject } from 'konva/lib/Node';
+import { ExtractEventData } from '../pureFunctions/data';
 
 export class MainLayer {
   //* Just type public in this fields if u want to make it public
+  pos = {
+    x: 240, y: 60
+  }
   x = 240;
   y = 60;
   origWidth = 890;
@@ -33,10 +38,7 @@ export class MainLayer {
     this.width = this.origWidth;
     this.height = this.origHeight;
 
-    const group = new Konva.Group({
-      x: this.x,
-      y: this.y,
-    });
+    const group = new Konva.Group(this.pos);
 
     this.group = group;
     layer.add(group);
@@ -51,8 +53,8 @@ export class MainLayer {
     this.outerLayer.push(page);
 
     let mainLayerRef = this;
-    this.page.group.on(PAGEEVENTS.MOUSEENTERED, (page) => {
-      mainLayerRef.onPageMouseEntered(page);
+    this.page.group.on(PAGEEVENTS.MOUSEENTERED, (ev) => {
+      mainLayerRef.onPageMouseEntered(ExtractEventData(ev));
     });
 
     this.layer = layer;
@@ -203,7 +205,7 @@ export class MainLayer {
     let mainLayerRef = this;
     topPage.PanelName = "Panel" + this.layerCtr;
     topPage.group.on(PAGEEVENTS.MOUSEENTERED, (page) => {
-      mainLayerRef.onPageMouseEntered(page);
+      mainLayerRef.onPageMouseEntered(ExtractEventData(page));
     });
 
     //* Create bottom position layer
@@ -222,7 +224,7 @@ export class MainLayer {
     this.outerLayer.push(bottomPage);
 
     bottomPage.group.on(PAGEEVENTS.MOUSEENTERED, (page) => {
-      mainLayerRef.onPageMouseEntered(page);
+      mainLayerRef.onPageMouseEntered(ExtractEventData(page));
     });
     this.layerCtr++;
     bottomPage.PanelName = "Panel" + this.layerCtr;
@@ -252,7 +254,7 @@ export class MainLayer {
     this.outerLayer.push(leftPage);
     let mainLayerRef = this;
     leftPage.group.on(PAGEEVENTS.MOUSEENTERED, (page) => {
-      mainLayerRef.onPageMouseEntered(page);
+      mainLayerRef.onPageMouseEntered(ExtractEventData(page));
     });
     this.layerCtr++;
     leftPage.PanelName = "Panel" + this.layerCtr;
@@ -267,7 +269,7 @@ export class MainLayer {
     this.group.add(rightPage.group);
 
     rightPage.group.on(PAGEEVENTS.MOUSEENTERED, (page) => {
-      mainLayerRef.onPageMouseEntered(page);
+      mainLayerRef.onPageMouseEntered(ExtractEventData(page));
     });
     layerPages.push(rightPage);
     this.outerLayer.push(rightPage);
