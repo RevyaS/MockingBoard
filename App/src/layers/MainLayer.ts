@@ -53,9 +53,7 @@ export class MainLayer {
     this.outerLayer.push(page);
 
     let mainLayerRef = this;
-    this.page.group.on(PAGEEVENTS.MOUSEENTERED, (ev) => {
-      mainLayerRef.onPageMouseEntered(ExtractEventData(ev));
-    });
+    this.page.group.on(PAGEEVENTS.MOUSEENTERED, this.onPageMouseEntered.bind(this));
 
     this.layer = layer;
 
@@ -64,7 +62,9 @@ export class MainLayer {
     };
   }
 
-  onPageMouseEntered(page: Page) {
+  //Event Function
+  onPageMouseEntered(ev: KonvaEventObject<any>) {
+    let page = ExtractEventData<Page>(ev);
     this.selectedPage = page;
     this.layer.fire(PAGEEVENTS.MOUSEENTERED, page);
   }
@@ -204,9 +204,7 @@ export class MainLayer {
     this.layerCtr++;
     let mainLayerRef = this;
     topPage.PanelName = "Panel" + this.layerCtr;
-    topPage.group.on(PAGEEVENTS.MOUSEENTERED, (page) => {
-      mainLayerRef.onPageMouseEntered(ExtractEventData(page));
-    });
+    topPage.group.on(PAGEEVENTS.MOUSEENTERED, this.onPageMouseEntered.bind(this));
 
     //* Create bottom position layer
     let remainingHeight = parentPage!.origSize.y - height;
@@ -223,9 +221,7 @@ export class MainLayer {
 
     this.outerLayer.push(bottomPage);
 
-    bottomPage.group.on(PAGEEVENTS.MOUSEENTERED, (page) => {
-      mainLayerRef.onPageMouseEntered(ExtractEventData(page));
-    });
+    bottomPage.group.on(PAGEEVENTS.MOUSEENTERED, this.onPageMouseEntered.bind(this));
     this.layerCtr++;
     bottomPage.PanelName = "Panel" + this.layerCtr;
 
@@ -253,9 +249,7 @@ export class MainLayer {
     layerPages.push(leftPage);
     this.outerLayer.push(leftPage);
     let mainLayerRef = this;
-    leftPage.group.on(PAGEEVENTS.MOUSEENTERED, (page) => {
-      mainLayerRef.onPageMouseEntered(ExtractEventData(page));
-    });
+    leftPage.group.on(PAGEEVENTS.MOUSEENTERED, this.onPageMouseEntered.bind(this));
     this.layerCtr++;
     leftPage.PanelName = "Panel" + this.layerCtr;
 
@@ -268,9 +262,7 @@ export class MainLayer {
     );
     this.group.add(rightPage.group);
 
-    rightPage.group.on(PAGEEVENTS.MOUSEENTERED, (page) => {
-      mainLayerRef.onPageMouseEntered(ExtractEventData(page));
-    });
+    rightPage.group.on(PAGEEVENTS.MOUSEENTERED, this.onPageMouseEntered.bind(this));
     layerPages.push(rightPage);
     this.outerLayer.push(rightPage);
     this.layers.push(layerPages);
