@@ -5,7 +5,7 @@ import PAGEEVENTS from '../states/PageEvents';
 import { Layer } from 'konva/lib/Layer';
 import Vector2 from '../models/Vector2';
 import { KonvaEventObject } from 'konva/lib/Node';
-import { ExtractEventData } from '../pureFunctions/data';
+import { ExtractEventData } from '../pureFunctions/event';
 
 export class MainLayer {
   //* Just type public in this fields if u want to make it public

@@ -9,6 +9,7 @@ import HorizontalRuler from '../ruler/HorizontalRuler';
 import CircleGuide from './CircleGuide';
 import PAGEEVENTS from '../states/PageEvents';
 import Vector2 from '../models/Vector2';
+import { GenerateEventFire } from '../pureFunctions/event';
 class Page {
   origSize: Vector2;
   fill: string;
@@ -183,8 +184,7 @@ class Page {
       this.group.zIndex(this.zIndex);
 
       //Generate event
-      const event = new CustomEvent(PAGEEVENTS.MOUSEENTERED, { detail: this })
-      this.group.fire(PAGEEVENTS.MOUSEENTERED, { evt: event });
+      const eventFire = GenerateEventFire(this.group)(PAGEEVENTS.MOUSEENTERED)(this);
     }
   }
 
@@ -331,6 +331,7 @@ class Page {
       fill: newColor,
     });
   }
+
   setPropertyName(newPanelName: string) {
     this.PanelName = newPanelName;
   }
