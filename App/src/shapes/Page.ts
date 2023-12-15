@@ -285,11 +285,12 @@ class Page {
   getRelativePositionUnscaled(mousePos: Vector2) {
     //Compute Relative Position of mouse to Page
     let relativePositionUnscaled = mousePos.clone();
-    let subtract = relativePositionUnscaled.subtractVec(this.position);
-    let divide = subtract.divideVec(this.size);
-    let multiplied = divide.multiplyVec(this.origSize);
+    let result = relativePositionUnscaled
+      .subtractVec(this.position)
+      .divideVec(this.size)
+      .multiplyVec(this.origSize);
 
-    return multiplied;
+    return result;
   }
 
   getMouseBoundsData(mousePos: { x: number, y: number }) {

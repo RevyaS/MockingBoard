@@ -275,11 +275,12 @@ export class MainLayer {
   getRelativePositionUnscaled(mousePos: Vector2) {
     //* Compute Relative Position of mouse to Page
     let relativePositionUnscaled = mousePos.clone();
-    let subtract = relativePositionUnscaled.subtract(this.position.x, this.position.y);
-    let divide = subtract.divide(this.width, this.height);
-    let multiplied = divide.multiply(this.origSize.x, this.origSize.y);
+    let result = relativePositionUnscaled
+      .subtractVec(this.position)
+      .divide(this.width, this.height)
+      .multiplyVec(this.origSize);
 
-    return multiplied;
+    return result;
   }
 
   getMouseBoundsData(mousePos: any) {
