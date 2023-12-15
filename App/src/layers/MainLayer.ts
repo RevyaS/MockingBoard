@@ -9,11 +9,7 @@ import { ExtractEventData } from '../pureFunctions/event';
 
 export class MainLayer {
   //* Just type public in this fields if u want to make it public
-  pos = {
-    x: 240, y: 60
-  }
-  x = 240;
-  y = 60;
+  position = new Vector2(240, 60);
   origWidth = 890;
   origHeight = 450;
   layers = <any>[];
@@ -38,7 +34,7 @@ export class MainLayer {
     this.width = this.origWidth;
     this.height = this.origHeight;
 
-    const group = new Konva.Group(this.pos);
+    const group = new Konva.Group(this.position);
 
     this.group = group;
     layer.add(group);
@@ -84,6 +80,7 @@ export class MainLayer {
   onMouseMove() {
     //* Check if within layer bounds
     let relativeMouse = this.group.getRelativePointerPosition();
+    console.log('DEBUG Layer mouse move test', relativeMouse, this.position);
     let mouseBoundData = this.getMouseBoundsData(relativeMouse);
 
     if (!mouseBoundData.inBounds.y || !mouseBoundData.inBounds.x) {
@@ -136,12 +133,12 @@ export class MainLayer {
       y: currPosition.y + offset.y,
     };
 
-    this.x = Math.floor(newPosition.x);
-    this.y = Math.floor(newPosition.y);
+    this.position.x = Math.floor(newPosition.x);
+    this.position.y = Math.floor(newPosition.y);
 
     let newGroupPos = {
-      x: this.x,
-      y: this.y,
+      x: this.position.x,
+      y: this.position.y,
     };
 
     this.group.setAbsolutePosition(newGroupPos);
@@ -280,7 +277,7 @@ export class MainLayer {
   getRelativePositionUnscaled(mousePos: Vector2) {
     //* Compute Relative Position of mouse to Page
     let relativePositionUnscaled = mousePos.clone();
-    relativePositionUnscaled.subtract(this.x, this.y);
+    relativePositionUnscaled.subtract(this.position.x, this.position.y);
     relativePositionUnscaled.divide(this.width, this.height);
     relativePositionUnscaled.multiply(this.origWidth, this.origHeight);
 
@@ -291,8 +288,8 @@ export class MainLayer {
     let topYBounds = 0 > mousePos.y;
     let bottomYBounds = this.origHeight <= mousePos.y;
     let inYBounds = !(topYBounds || bottomYBounds);
-    let onTopHalf = this.y + this.height / 2 > mousePos.y;
-    let onLeftHalf = this.x + this.width / 2 > mousePos.x;
+    let onTopHalf = this.position.y + this.height / 2 > mousePos.y;
+    let onLeftHalf = this.position.x + this.width / 2 > mousePos.x;
 
     let topXBounds = 0 > mousePos.x;
     let bottomXBounds = this.origWidth < mousePos.x;

@@ -167,6 +167,7 @@ class Page {
 
   onMouseMove() {
     let relativeMouse = this.group.getRelativePointerPosition();
+    console.log('DEBUG PAGE MOUSEBOUNDSDATA', relativeMouse, this.position);
     let mouseBoundsData = this.getMouseBoundsData(relativeMouse);
     if (mouseBoundsData.inBounds.y && mouseBoundsData.inBounds.x) {
       this.mouseEnter();
