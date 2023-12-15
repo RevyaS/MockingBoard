@@ -10,8 +10,7 @@ import { ExtractEventData } from '../pureFunctions/event';
 export class MainLayer {
   //* Just type public in this fields if u want to make it public
   position = new Vector2(240, 60);
-  origWidth = 890;
-  origHeight = 450;
+  origSize = new Vector2(890, 450);
   layers = <any>[];
   outerLayer = <any>[];
 
@@ -31,8 +30,8 @@ export class MainLayer {
     this.state = APPSTATE.DEFAULT;
     this.layerCtr = 1;
     const layer = new Konva.Layer();
-    this.width = this.origWidth;
-    this.height = this.origHeight;
+    this.width = this.origSize.x;
+    this.height = this.origSize.y;
 
     const group = new Konva.Group(this.position);
 
@@ -40,7 +39,7 @@ export class MainLayer {
     layer.add(group);
 
     //* Iniial Page Size
-    const page = new Page(new Vector2(0, 0), new Vector2(this.origWidth, this.origHeight), 0);
+    const page = new Page(new Vector2(0, 0), new Vector2(this.origSize.x, this.origSize.y), 0);
 
     group.add(page.group);
 
@@ -153,8 +152,8 @@ export class MainLayer {
       y: scaleY,
     };
 
-    this.width = Math.floor(this.origWidth * scaleX);
-    this.height = Math.floor(this.origHeight * scaleX);
+    this.width = Math.floor(this.origSize.x * scaleX);
+    this.height = Math.floor(this.origSize.y * scaleX);
     this.group.scale(newScale);
   }
 
@@ -279,20 +278,20 @@ export class MainLayer {
     let relativePositionUnscaled = mousePos.clone();
     relativePositionUnscaled.subtract(this.position.x, this.position.y);
     relativePositionUnscaled.divide(this.width, this.height);
-    relativePositionUnscaled.multiply(this.origWidth, this.origHeight);
+    relativePositionUnscaled.multiply(this.origSize.x, this.origSize.y);
 
     return relativePositionUnscaled;
   }
 
   getMouseBoundsData(mousePos: any) {
     let topYBounds = 0 > mousePos.y;
-    let bottomYBounds = this.origHeight <= mousePos.y;
+    let bottomYBounds = this.origSize.y <= mousePos.y;
     let inYBounds = !(topYBounds || bottomYBounds);
     let onTopHalf = this.position.y + this.height / 2 > mousePos.y;
     let onLeftHalf = this.position.x + this.width / 2 > mousePos.x;
 
     let topXBounds = 0 > mousePos.x;
-    let bottomXBounds = this.origWidth < mousePos.x;
+    let bottomXBounds = this.origSize.x < mousePos.x;
     let inXBounds = !(topXBounds || bottomXBounds);
 
     // Sets mouse BoundsData
