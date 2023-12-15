@@ -135,12 +135,7 @@ export class MainLayer {
     this.position.x = Math.floor(newPosition.x);
     this.position.y = Math.floor(newPosition.y);
 
-    let newGroupPos = {
-      x: this.position.x,
-      y: this.position.y,
-    };
-
-    this.group.setAbsolutePosition(newGroupPos);
+    this.group.setAbsolutePosition(this.position);
   }
 
   scaleBy(scaleRatio: number) {
