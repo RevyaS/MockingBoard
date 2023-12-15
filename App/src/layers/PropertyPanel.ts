@@ -1,6 +1,8 @@
 import Konva from 'konva';
 import Page from '../shapes/Page';
 import { Layer } from 'konva/lib/Layer';
+import { KonvaEventObject } from 'konva/lib/Node';
+import { ExtractEventData } from '../pureFunctions/event';
 
 export class PropertyPanel {
   layer: Konva.Layer;
@@ -73,10 +75,8 @@ export class PropertyPanel {
     this.layer.add(this.group);
     this.layer = this.layer;
   }
-  Panelset(
-    page: Page
-  ) {
-    this.pages = page;
+  Panelset(ev: KonvaEventObject<any>) {
+    this.pages = ExtractEventData(ev);
   }
   PanelClick() {
     if (this.pages != null) {

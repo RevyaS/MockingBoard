@@ -1,6 +1,8 @@
 import Konva from 'konva';
 import MainLayer from './MainLayer';
 import Page from '../shapes/Page';
+import { KonvaEventObject } from 'konva/lib/Node';
+import { ExtractEventData } from '../pureFunctions/event';
 
 export class DebuggingSquare {
   width: number;
@@ -14,7 +16,7 @@ export class DebuggingSquare {
   mouse: Konva.Text;
   layerScale: Konva.Text;
   currentLayer: Konva.Text;
-  currentPage: any;
+  currentPage: Page | null;
   mainLayer: MainLayer;
   borderSquare: Konva.Rect;
   layerSize: any;
@@ -316,39 +318,40 @@ export class DebuggingSquare {
     this.layer.opacity(opacity);
   }
 
-  setCurrentPage(currentPage: Page) {
-    this.currentPage = currentPage;
+  setCurrentPage(ev: KonvaEventObject<any>) {
+    console.log("EV TEST DEBUGGING SQUARE", ev);
+    this.currentPage = ExtractEventData(ev);
     for (let pagedata of this.currentPageData) {
       pagedata.opacity(1);
       //Update values
       this.pageBounds00.setAttrs({
-        text: 'selectedPage00: (' + currentPage.position.x + ',' + currentPage.position.y + ')',
+        text: 'selectedPage00: (' + this.currentPage?.position.x + ',' + this.currentPage?.position.y + ')',
       });
 
       this.pageBounds01.setAttrs({
         text:
           'selectedPage01: (' +
-          currentPage.position.x +
+          this.currentPage?.position.x +
           ',' +
-          (currentPage.position.y + currentPage.size.y) +
+          ((this.currentPage?.position.y ?? 0) + (this.currentPage?.size.y ?? 0)) +
           ')',
       });
 
       this.pageBounds10.setAttrs({
         text:
           'selectedPage10: (' +
-          (currentPage.position.x + currentPage.size.x) +
+          ((this.currentPage?.position.x ?? 0) + (this.currentPage?.size?.x ?? 0)) +
           ',' +
-          currentPage.position.y +
+          this.currentPage?.position.y +
           ')',
       });
 
       this.pageBounds11.setAttrs({
         text:
           'selectedPage11: (' +
-          (currentPage.position.x + currentPage.size.x) +
+          ((this.currentPage?.position.x ?? 0) + (this.currentPage?.size.x ?? 0)) +
           ',' +
-          (currentPage.position.y + currentPage.size.y) +
+          ((this.currentPage?.position.y ?? 0) + (this.currentPage?.size.y ?? 0)) +
           ')',
       });
 
@@ -356,9 +359,9 @@ export class DebuggingSquare {
       this.pageSize.setAttrs({
         text:
           'selectedPageSize: (' +
-          currentPage.size.x +
+          this.currentPage?.size.x +
           ',' +
-          currentPage.size.y +
+          this.currentPage?.size.y +
           ')',
       });
     }

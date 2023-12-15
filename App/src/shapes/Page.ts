@@ -188,7 +188,7 @@ class Page {
       this.group.zIndex(this.zIndex);
 
       //Generate event
-      const eventFire = GenerateEventFire(this.group)(PAGEEVENTS.MOUSEENTERED)(this);
+      GenerateEventFire(this.group)(PAGEEVENTS.MOUSEENTERED)(this);
     }
   }
 
@@ -204,6 +204,7 @@ class Page {
       this.circleGuideLine.setOpacity(0);
       this.horizontalRuler.setOpacity(0);
       this.verticalRuler.setOpacity(0);
+
       this.group.fire(PAGEEVENTS.MOUSEEXITED);
     }
   }

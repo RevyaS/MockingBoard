@@ -5,7 +5,7 @@ import PAGEEVENTS from '../states/PageEvents';
 import { Layer } from 'konva/lib/Layer';
 import Vector2 from '../models/Vector2';
 import { KonvaEventObject } from 'konva/lib/Node';
-import { ExtractEventData } from '../pureFunctions/event';
+import { ExtractEventData, GenerateEventFire } from '../pureFunctions/event';
 import Panel from '../models/Panel';
 
 export class MainLayer {
@@ -62,7 +62,7 @@ export class MainLayer {
   onPageMouseEntered(ev: KonvaEventObject<any>) {
     let page = ExtractEventData<Page>(ev);
     this.selectedPage = page;
-    this.layer.fire(PAGEEVENTS.MOUSEENTERED, page);
+    GenerateEventFire(this.group)(PAGEEVENTS.MOUSEENTERED)(page);
   }
 
   onPageMouseExited() {
@@ -127,7 +127,6 @@ export class MainLayer {
       x: Math.floor(zoomCenter.x) * scalarOffset,
       y: Math.floor(zoomCenter.y) * scalarOffset,
     };
-
 
     let currPosition = this.group.getPosition();
     let newPosition = {
