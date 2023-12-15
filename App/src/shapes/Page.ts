@@ -9,6 +9,7 @@ import HorizontalRuler from '../ruler/HorizontalRuler';
 import CircleGuide from './CircleGuide';
 import PAGEEVENTS from '../states/PageEvents';
 import Vector2 from '../models/Vector2';
+import Panel from '../models/Panel';
 import { GenerateEventFire } from '../pureFunctions/event';
 class Page {
   origSize: Vector2;
@@ -210,8 +211,7 @@ class Page {
   showHorizontalSliceGuideLine() {
     let relativeMouseAny = this.group.getRelativePointerPosition();
     let relativeMouse = new Vector2(relativeMouseAny.x, relativeMouseAny.y);
-    let relativePositionUnscaled =
-      this.getRelativePositionUnscaled(relativeMouse);
+    let relativePositionUnscaled = Panel.GetRelativePositionUnscaled(this, relativeMouse);
 
     let mouseBoundsData = this.getMouseBoundsData(relativeMouse);
     let relativePositionFromParent = {
@@ -243,8 +243,7 @@ class Page {
   showVerticalSliceGuideLine() {
     let relativeMouseAny = this.group.getRelativePointerPosition();
     let relativeMouse = new Vector2(relativeMouseAny.x, relativeMouseAny.y);
-    let relativePositionUnscaled =
-      this.getRelativePositionUnscaled(relativeMouse);
+    let relativePositionUnscaled = Panel.GetRelativePositionUnscaled(this, relativeMouse);
     let mouseBoundsData = this.getMouseBoundsData(relativeMouse);
     let relativePositionFromParent = {
       x: relativePositionUnscaled.x + this.position.x,
@@ -280,17 +279,6 @@ class Page {
       let maxZIndex = this.group.children.length - 1;
       this.circleGuideLine.group.zIndex(maxZIndex);
     }
-  }
-
-  getRelativePositionUnscaled(mousePos: Vector2) {
-    //Compute Relative Position of mouse to Page
-    let relativePositionUnscaled = mousePos.clone();
-    let result = relativePositionUnscaled
-      .subtractVec(this.position)
-      .divideVec(this.size)
-      .multiplyVec(this.origSize);
-
-    return result;
   }
 
   getMouseBoundsData(mousePos: { x: number, y: number }) {

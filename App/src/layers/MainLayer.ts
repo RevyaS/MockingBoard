@@ -6,6 +6,7 @@ import { Layer } from 'konva/lib/Layer';
 import Vector2 from '../models/Vector2';
 import { KonvaEventObject } from 'konva/lib/Node';
 import { ExtractEventData } from '../pureFunctions/event';
+import Panel from '../models/Panel';
 
 export class MainLayer {
   //* Just type public in this fields if u want to make it public
@@ -158,7 +159,7 @@ export class MainLayer {
     let pos = new Vector2(posAny.x, posAny.y);
 
     //* Find Division
-    let relativePos = this.getRelativePositionUnscaled(pos);
+    let relativePos = Panel.GetRelativePositionUnscaled(this, pos);
 
     if (this.selectedPage === null) return;
     switch (this.state) {
@@ -267,17 +268,6 @@ export class MainLayer {
         --i; //* decrement index to recheck the current index after removal
       }
     }
-  }
-
-  getRelativePositionUnscaled(mousePos: Vector2) {
-    //* Compute Relative Position of mouse to Page
-    let relativePositionUnscaled = mousePos.clone();
-    let result = relativePositionUnscaled
-      .subtractVec(this.position)
-      .divideVec(this.size)
-      .multiplyVec(this.origSize);
-
-    return result;
   }
 
   getMouseBoundsData(mousePos: any) {
