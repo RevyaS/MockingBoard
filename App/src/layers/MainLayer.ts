@@ -24,6 +24,8 @@ export class MainLayer {
   page: Page;
   layerCtr: number;
 
+  mouseDebugMode: boolean = true;
+
   public getScale: any;
 
   constructor() {
@@ -79,7 +81,9 @@ export class MainLayer {
   onMouseMove() {
     //* Check if within layer bounds
     let relativeMouse = this.group.getRelativePointerPosition();
-    console.log('DEBUG Layer mouse move test', relativeMouse, this.position);
+    if (this.mouseDebugMode) {
+      console.log('DEBUG Layer mouse move test', relativeMouse, this.position);
+    }
     let mouseBoundData = this.getMouseBoundsData(relativeMouse);
 
     if (!mouseBoundData.inBounds.y || !mouseBoundData.inBounds.x) {
@@ -157,7 +161,9 @@ export class MainLayer {
     let pos = new Vector2(posAny.x, posAny.y);
 
     //* Find Division
+    console.log(`Sample input ${pos.x}, ${pos.y}`);
     let relativePos = this.getRelativePositionUnscaled(pos);
+    console.log(`Sample output ${relativePos.x}, ${relativePos.y}`);
 
     if (this.selectedPage === null) return;
     switch (this.state) {
@@ -271,11 +277,11 @@ export class MainLayer {
   getRelativePositionUnscaled(mousePos: Vector2) {
     //* Compute Relative Position of mouse to Page
     let relativePositionUnscaled = mousePos.clone();
-    relativePositionUnscaled.subtract(this.position.x, this.position.y);
-    relativePositionUnscaled.divide(this.width, this.height);
-    relativePositionUnscaled.multiply(this.origSize.x, this.origSize.y);
+    let subtract = relativePositionUnscaled.subtract(this.position.x, this.position.y);
+    subtract.divide(this.width, this.height);
+    subtract.multiply(this.origSize.x, this.origSize.y);
 
-    return relativePositionUnscaled;
+    return subtract;
   }
 
   getMouseBoundsData(mousePos: any) {

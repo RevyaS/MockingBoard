@@ -29,7 +29,7 @@ class Page {
   gradientWidth = 38;
   state = APPSTATE.DEFAULT;
   circleGuideLine: CircleGuide;
-
+  mouseDebugMode: boolean = true;
   constructor(
     public position: Vector2,
     public size: Vector2,
@@ -167,7 +167,9 @@ class Page {
 
   onMouseMove() {
     let relativeMouse = this.group.getRelativePointerPosition();
-    console.log('DEBUG PAGE MOUSEBOUNDSDATA', relativeMouse, this.position);
+    if (this.mouseDebugMode) {
+      console.log('DEBUG PAGE MOUSEBOUNDSDATA', relativeMouse, this.position);
+    }
     let mouseBoundsData = this.getMouseBoundsData(relativeMouse);
     if (mouseBoundsData.inBounds.y && mouseBoundsData.inBounds.x) {
       this.mouseEnter();
@@ -282,11 +284,11 @@ class Page {
   getRelativePositionUnscaled(mousePos: Vector2) {
     //Compute Relative Position of mouse to Page
     let relativePositionUnscaled = mousePos.clone();
-    relativePositionUnscaled.subtractVec(this.position);
-    relativePositionUnscaled.divideVec(this.size);
-    relativePositionUnscaled.multiplyVec(this.origSize);
+    let subtract = relativePositionUnscaled.subtractVec(this.position);
+    subtract.divideVec(this.size);
+    subtract.multiplyVec(this.origSize);
 
-    return relativePositionUnscaled;
+    return subtract;
   }
 
   getMouseBoundsData(mousePos: { x: number, y: number }) {

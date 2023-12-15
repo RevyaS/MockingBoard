@@ -9,13 +9,11 @@ class Vector2 {
 	}
 
 	subtract(x: number, y: number) {
-		this.x -= x;
-		this.y -= y;
+		return new Vector2(this.x - x, this.y - y);
 	}
 
 	subtractVec(vec: Vector2) {
-		this.x -= vec.x;
-		this.y -= vec.y;
+		return this.subtract(vec.x, vec.y)
 	}
 
 	divide(x: number, y: number) {
