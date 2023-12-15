@@ -25,13 +25,11 @@ class Vector2 {
 	}
 
 	multiply(x: number, y: number) {
-		this.x *= x;
-		this.y *= y;
+		return new Vector2(this.x * x, this.y * y);
 	}
 
 	multiplyVec(vec: Vector2) {
-		this.x *= vec.x;
-		this.y *= vec.y;
+		return this.multiply(vec.x, vec.y)
 	}
 
 	clone() {

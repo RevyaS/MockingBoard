@@ -277,9 +277,9 @@ export class MainLayer {
     let relativePositionUnscaled = mousePos.clone();
     let subtract = relativePositionUnscaled.subtract(this.position.x, this.position.y);
     let divide = subtract.divide(this.width, this.height);
-    divide.multiply(this.origSize.x, this.origSize.y);
+    let multiplied = divide.multiply(this.origSize.x, this.origSize.y);
 
-    return divide;
+    return multiplied;
   }
 
   getMouseBoundsData(mousePos: any) {

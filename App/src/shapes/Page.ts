@@ -287,9 +287,9 @@ class Page {
     let relativePositionUnscaled = mousePos.clone();
     let subtract = relativePositionUnscaled.subtractVec(this.position);
     let divide = subtract.divideVec(this.size);
-    divide.multiplyVec(this.origSize);
+    let multiplied = divide.multiplyVec(this.origSize);
 
-    return divide;
+    return multiplied;
   }
 
   getMouseBoundsData(mousePos: { x: number, y: number }) {
