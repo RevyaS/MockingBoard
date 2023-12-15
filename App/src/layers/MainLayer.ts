@@ -161,9 +161,7 @@ export class MainLayer {
     let pos = new Vector2(posAny.x, posAny.y);
 
     //* Find Division
-    console.log(`Sample input ${pos.x}, ${pos.y}`);
     let relativePos = this.getRelativePositionUnscaled(pos);
-    console.log(`Sample output ${relativePos.x}, ${relativePos.y}`);
 
     if (this.selectedPage === null) return;
     switch (this.state) {
@@ -278,10 +276,10 @@ export class MainLayer {
     //* Compute Relative Position of mouse to Page
     let relativePositionUnscaled = mousePos.clone();
     let subtract = relativePositionUnscaled.subtract(this.position.x, this.position.y);
-    subtract.divide(this.width, this.height);
-    subtract.multiply(this.origSize.x, this.origSize.y);
+    let divide = subtract.divide(this.width, this.height);
+    divide.multiply(this.origSize.x, this.origSize.y);
 
-    return subtract;
+    return divide;
   }
 
   getMouseBoundsData(mousePos: any) {

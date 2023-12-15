@@ -17,13 +17,11 @@ class Vector2 {
 	}
 
 	divide(x: number, y: number) {
-		this.x /= x;
-		this.y /= y;
+		return new Vector2(this.x / x, this.y / y);
 	}
 
 	divideVec(vec: Vector2) {
-		this.x /= vec.x;
-		this.y /= vec.y;
+		return this.divide(vec.x, vec.y)
 	}
 
 	multiply(x: number, y: number) {
