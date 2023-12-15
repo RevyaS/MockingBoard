@@ -14,10 +14,9 @@ export class MainLayer {
   layers = <any>[];
   outerLayer = <any>[];
 
+  size: Vector2;
   state: string;
   selectedPage: Page | null = null;
-  width: number;
-  height: any;
   layer: Layer;
   currentLayer = 0;
   group: Konva.Group;
@@ -32,8 +31,7 @@ export class MainLayer {
     this.state = APPSTATE.DEFAULT;
     this.layerCtr = 1;
     const layer = new Konva.Layer();
-    this.width = this.origSize.x;
-    this.height = this.origSize.y;
+    this.size = this.origSize;
 
     const group = new Konva.Group(this.position);
 
@@ -151,8 +149,7 @@ export class MainLayer {
       y: scaleY,
     };
 
-    this.width = Math.floor(this.origSize.x * scaleX);
-    this.height = Math.floor(this.origSize.y * scaleX);
+    this.size = this.origSize.multiplyScalar(scaleX).floor();
     this.group.scale(newScale);
   }
 
@@ -277,7 +274,7 @@ export class MainLayer {
     let relativePositionUnscaled = mousePos.clone();
     let result = relativePositionUnscaled
       .subtractVec(this.position)
-      .divide(this.width, this.height)
+      .divideVec(this.size)
       .multiplyVec(this.origSize);
 
     return result;
@@ -287,8 +284,8 @@ export class MainLayer {
     let topYBounds = 0 > mousePos.y;
     let bottomYBounds = this.origSize.y <= mousePos.y;
     let inYBounds = !(topYBounds || bottomYBounds);
-    let onTopHalf = this.position.y + this.height / 2 > mousePos.y;
-    let onLeftHalf = this.position.x + this.width / 2 > mousePos.x;
+    let onTopHalf = this.position.y + this.size.y / 2 > mousePos.y;
+    let onLeftHalf = this.position.x + this.size.x / 2 > mousePos.x;
 
     let topXBounds = 0 > mousePos.x;
     let bottomXBounds = this.origSize.x < mousePos.x;

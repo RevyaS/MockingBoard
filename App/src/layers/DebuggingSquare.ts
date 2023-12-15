@@ -106,7 +106,7 @@ export class DebuggingSquare {
         'layerPage01: (' +
         mainLayer.position.x +
         ',' +
-        (mainLayer.position.y + mainLayer.height) +
+        (mainLayer.position.y + mainLayer.size.y) +
         ')',
       fill: this.fontColor,
     });
@@ -120,7 +120,7 @@ export class DebuggingSquare {
       fontSize: this.fontSize,
       text:
         'layerPage10: (' +
-        (mainLayer.position.x + mainLayer.width) +
+        (mainLayer.position.x + mainLayer.size.x) +
         ',' +
         mainLayer.position.y +
         ')',
@@ -136,9 +136,9 @@ export class DebuggingSquare {
       fontSize: this.fontSize,
       text:
         'layerPage11: (' +
-        (mainLayer.position.x + mainLayer.width) +
+        (mainLayer.position.x + mainLayer.size.x) +
         ',' +
-        (mainLayer.position.y + mainLayer.height) +
+        (mainLayer.position.y + mainLayer.size.y) +
         ')',
       fill: this.fontColor,
     });
@@ -174,7 +174,7 @@ export class DebuggingSquare {
       y: yPos,
       fontFamily: this.fontFamily,
       fontSize: this.fontSize,
-      text: 'layerPageSize: (' + mainLayer.width + ',' + mainLayer.height + ')',
+      text: 'layerPageSize: (' + mainLayer.size.x + ',' + mainLayer.size.y + ')',
       fill: this.fontColor,
     });
     layer.add(this.layerSize);
@@ -203,7 +203,7 @@ export class DebuggingSquare {
         'selectedPage01: (' +
         mainLayer.position.x +
         ',' +
-        (mainLayer.position.y + mainLayer.height) +
+        (mainLayer.position.y + mainLayer.size.y) +
         ')',
       fill: this.fontColor,
     });
@@ -219,7 +219,7 @@ export class DebuggingSquare {
       fontSize: this.fontSize,
       text:
         'selectedPage10: (' +
-        (mainLayer.position.x + mainLayer.width) +
+        (mainLayer.position.x + mainLayer.size.x) +
         ',' +
         mainLayer.position.y +
         ')',
@@ -237,9 +237,9 @@ export class DebuggingSquare {
       fontSize: this.fontSize,
       text:
         'selectedPage11: (' +
-        (mainLayer.position.x + mainLayer.width) +
+        (mainLayer.position.x + mainLayer.size.x) +
         ',' +
-        (mainLayer.position.y + mainLayer.height) +
+        (mainLayer.position.y + mainLayer.size.y) +
         ')',
       fill: this.fontColor,
     });
@@ -255,7 +255,7 @@ export class DebuggingSquare {
       fontFamily: this.fontFamily,
       fontSize: this.fontSize,
       text:
-        'selectedPageSize: (' + mainLayer.width + ',' + mainLayer.height + ')',
+        'selectedPageSize: (' + mainLayer.size.x + ',' + mainLayer.size.y + ')',
       fill: this.fontColor,
     });
     layer.add(this.pageSize);
@@ -277,9 +277,9 @@ export class DebuggingSquare {
     );
     this.layerSize.setText(
       'layerPageSize: (' +
-      this.mainLayer.width +
+      this.mainLayer.size.x +
       ',' +
-      this.mainLayer.height +
+      this.mainLayer.size.y +
       ')',
     );
     this.layerBounds00.setText(
@@ -289,21 +289,21 @@ export class DebuggingSquare {
       'layerPage01: (' +
       this.mainLayer.position.x +
       ',' +
-      (this.mainLayer.position.y + this.mainLayer.height) +
+      (this.mainLayer.position.y + this.mainLayer.size.y) +
       ')',
     );
     this.layerBounds10.setText(
       'layerPage10: (' +
-      (this.mainLayer.position.x + this.mainLayer.width) +
+      (this.mainLayer.position.x + this.mainLayer.size.x) +
       ',' +
       this.mainLayer.position.y +
       ')',
     );
     this.layerBounds11.setText(
       'layerPage11: (' +
-      (this.mainLayer.position.x + this.mainLayer.width) +
+      (this.mainLayer.position.x + this.mainLayer.size.x) +
       ',' +
-      (this.mainLayer.position.y + this.mainLayer.height) +
+      (this.mainLayer.position.y + this.mainLayer.size.y) +
       ')',
     );
   }

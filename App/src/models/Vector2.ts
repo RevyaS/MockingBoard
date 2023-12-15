@@ -8,6 +8,10 @@ class Vector2 {
 		this.y = Math.floor(y);
 	}
 
+	floor() {
+		return new Vector2(Math.floor(this.x), Math.floor(this.y));
+	}
+
 	subtract(x: number, y: number) {
 		return new Vector2(this.x - x, this.y - y);
 	}
@@ -30,6 +34,10 @@ class Vector2 {
 
 	multiplyVec(vec: Vector2) {
 		return this.multiply(vec.x, vec.y)
+	}
+
+	multiplyScalar(ratio: number) {
+		return new Vector2(this.x * ratio, this.y * ratio);
 	}
 
 	clone() {
