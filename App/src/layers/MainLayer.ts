@@ -132,14 +132,8 @@ export class MainLayer {
 
   scaleBy(scaleRatio: number) {
     let currScale = this.getScale();
-    let scaleX = currScale.x * scaleRatio;
-    let scaleY = currScale.y * scaleRatio;
-    let newScale = {
-      x: scaleX,
-      y: scaleY,
-    };
-
-    this.size = this.origSize.multiplyScalar(scaleX).floor();
+    let newScale = Vector2.Of(currScale).multiplyScalar(scaleRatio);
+    this.size = this.origSize.multiplyScalar(newScale.x).floor();
     this.group.scale(newScale);
   }
 
@@ -184,7 +178,6 @@ export class MainLayer {
 
     this.outerLayer.push(topPage);
     this.layerCtr++;
-    let mainLayerRef = this;
     topPage.PanelName = "Panel" + this.layerCtr;
     topPage.group.on(PAGEEVENTS.MOUSEENTERED, this.onPageMouseEntered.bind(this));
 
@@ -230,7 +223,6 @@ export class MainLayer {
 
     layerPages.push(leftPage);
     this.outerLayer.push(leftPage);
-    let mainLayerRef = this;
     leftPage.group.on(PAGEEVENTS.MOUSEENTERED, this.onPageMouseEntered.bind(this));
     this.layerCtr++;
     leftPage.PanelName = "Panel" + this.layerCtr;
