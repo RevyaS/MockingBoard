@@ -95,10 +95,7 @@ export class MainLayer {
 
     if (this.selectedPage == null) return;
 
-    let relativeMouseFromSelectedPage = {
-      x: relativeMouse.x - this.selectedPage.position.x,
-      y: relativeMouse.y - this.selectedPage.position.y,
-    };
+    let relativeMouseFromSelectedPage = Vector2.Of(relativeMouse).subtractVec(this.selectedPage.position);
 
     switch (this.state) {
       case APPSTATE.HORIZONTALSLICE:
@@ -123,19 +120,12 @@ export class MainLayer {
     //* Reposition
     let newScale = this.group.scale();
     let scalarOffset = currentScale!.x - newScale!.x;
-    let offset = {
-      x: Math.floor(zoomCenter.x) * scalarOffset,
-      y: Math.floor(zoomCenter.y) * scalarOffset,
-    };
+    let offset = Vector2.Of(zoomCenter).floor().multiplyScalar(scalarOffset);
 
     let currPosition = this.group.getPosition();
-    let newPosition = {
-      x: currPosition.x + offset.x,
-      y: currPosition.y + offset.y,
-    };
+    let newPosition = Vector2.Of(currPosition).add(offset);
 
-    this.position.x = Math.floor(newPosition.x);
-    this.position.y = Math.floor(newPosition.y);
+    this.position = newPosition.floor();
 
     this.group.setAbsolutePosition(this.position);
   }
